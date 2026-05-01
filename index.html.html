@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>家庭旅遊行程比較 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FAF6F0;--dark:#1a1a1a;--jp-g:#2D5016;--jp-a:#6B9E3E;--jp-l:#EEF4E8;--ba-r:#8B2E00;--ba-a:#D4581A;--ba-l:#FDF1E8;--th-g:#7B5A00;--th-a:#C49A00;--th-l:#FDF8E8;--shadow:0 4px 20px rgba(0,0,0,0.1)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;display:flex}
+.sidebar{width:200px;min-height:100vh;background:#1a1a1a;display:flex;flex-direction:column;padding:28px 0 20px;flex-shrink:0;position:fixed;top:0;left:0;bottom:0}
+.sidebar-title{font-family:'Playfair Display',serif;color:#e8d8c0;font-size:13px;letter-spacing:2px;text-transform:uppercase;padding:0 20px 22px;border-bottom:1px solid #333;line-height:1.6}
+.dest-tab{padding:16px 20px;cursor:pointer;color:#888;font-size:13px;font-weight:500;transition:all .25s;border-left:3px solid transparent;display:flex;align-items:center;gap:10px}
+.dest-tab:hover{color:#ddd;background:rgba(255,255,255,.04)}
+.dest-tab.active-jp{color:#a5cf72;border-left-color:var(--jp-a);background:rgba(107,158,62,.1)}
+.dest-tab.active-bali{color:#f0a070;border-left-color:var(--ba-a);background:rgba(212,88,26,.1)}
+.dest-tab.active-thai{color:#f0d060;border-left-color:var(--th-a);background:rgba(196,154,0,.1)}
+.dest-tab .flag{font-size:20px}.dest-tab .dest-name{line-height:1.3}
+.dest-tab .dest-sub{font-size:10px;opacity:.6;display:block;margin-top:2px}
+.sidebar-footer{margin-top:auto;padding:14px 20px;font-size:10px;color:#555;border-top:1px solid #333}
+.main{margin-left:200px;flex:1;min-height:100vh}
+.destination-panel{display:none;min-height:100vh;flex-direction:column}
+.destination-panel.active{display:flex}
+.hero{height:240px;position:relative;overflow:hidden;display:flex;align-items:flex-end}
+.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(.5);transition:transform .8s ease}
+.hero:hover .hero-bg{transform:scale(1.03)}
+.hero-content{position:relative;z-index:1;padding:28px 40px;color:white}
+.hero-badge{display:inline-block;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:3px 12px;border-radius:20px;margin-bottom:8px;font-weight:500}
+.jp-badge{background:rgba(107,158,62,.85)}.ba-badge{background:rgba(212,88,26,.85)}.th-badge{background:rgba(196,154,0,.85)}
+.hero h1{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;line-height:1.2;margin-bottom:5px;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+.hero p{font-size:13px;opacity:.85}
+.day-tabs-bar{background:white;padding:0 32px;display:flex;gap:2px;border-bottom:1px solid #e8e0d4;overflow-x:auto;scrollbar-width:none;position:sticky;top:0;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.day-tabs-bar::-webkit-scrollbar{display:none}
+.day-tab{padding:12px 16px;cursor:pointer;font-size:11px;font-weight:500;color:#888;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;text-align:center;line-height:1.4}
+.day-tab:hover{color:#444}
+.day-tab.active-jp{color:var(--jp-g);border-bottom-color:var(--jp-a)}
+.day-tab.active-bali{color:var(--ba-r);border-bottom-color:var(--ba-a)}
+.day-tab.active-thai{color:var(--th-g);border-bottom-color:var(--th-a)}
+.day-panel{display:none;padding:28px 40px 60px}
+.day-panel.active{display:block}
+.day-header{display:flex;align-items:baseline;gap:12px;margin-bottom:20px}
+.day-num{font-family:'Playfair Display',serif;font-size:52px;font-weight:700;line-height:1;opacity:.1}
+.jp-num{color:var(--jp-g)}.ba-num{color:var(--ba-r)}.th-num{color:var(--th-g)}
+.day-title-wrap h2{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;margin-bottom:3px}
+.day-title-wrap p{font-size:12px;color:#888}
+.route-banner{display:flex;align-items:center;gap:6px;background:white;border-radius:10px;padding:12px 18px;margin-bottom:24px;font-size:12px;box-shadow:0 2px 10px rgba(0,0,0,.06);flex-wrap:wrap}
+.route-stop{display:flex;align-items:center;gap:5px;font-weight:500}
+.route-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.jp-dot{background:var(--jp-a)}.ba-dot{background:var(--ba-a)}.th-dot{background:var(--th-a)}
+.route-arrow{color:#ccc;font-size:14px}
+/* OPTION TABS */
+.opt-bar{display:flex;gap:8px;margin-bottom:20px;align-items:center}
+.opt-bar-label{font-size:11px;color:#aaa;letter-spacing:1px;text-transform:uppercase;margin-right:4px}
+.opt-btn{padding:7px 16px;border-radius:20px;border:2px solid #e0d8cc;background:white;cursor:pointer;font-size:12px;font-weight:600;color:#999;transition:all .2s;font-family:'Noto Sans TC',sans-serif}
+.opt-btn:hover{border-color:#ccc;color:#666}
+.opt-btn.jp-active{border-color:var(--jp-a);background:var(--jp-l);color:var(--jp-g)}
+.opt-btn.ba-active{border-color:var(--ba-a);background:var(--ba-l);color:var(--ba-r)}
+.opt-btn.th-active{border-color:var(--th-a);background:var(--th-l);color:var(--th-g)}
+.opt-panel{display:none}.opt-panel.active{display:block}
+/* CARDS */
+.places-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px;margin-bottom:28px}
+.place-card{background:white;border-radius:14px;overflow:hidden;box-shadow:var(--shadow);transition:transform .25s,box-shadow .25s}
+.place-card:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(0,0,0,.14)}
+.card-photo{width:100%;height:190px;object-fit:cover;display:block}
+.card-photo-blank{width:100%;height:190px;background:#f0ece6;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:12px}
+.card-body{padding:16px 18px 18px}
+.card-tag{display:inline-block;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:12px;margin-bottom:8px;font-weight:600}
+.jp-tag{background:var(--jp-l);color:var(--jp-g)}.ba-tag{background:var(--ba-l);color:var(--ba-r)}.th-tag{background:var(--th-l);color:var(--th-g)}
+.card-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:600;margin-bottom:5px;line-height:1.3}
+.card-sub{font-size:11px;color:#aaa;margin-bottom:10px}
+.card-desc{font-size:13px;color:#555;line-height:1.75;margin-bottom:12px}
+.card-time{font-size:11px;color:#999;margin-bottom:8px}
+.map-link{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;padding:5px 12px;border-radius:16px;text-decoration:none;transition:opacity .2s}
+.map-link:hover{opacity:.7}
+.jp-map{background:var(--jp-l);color:var(--jp-g)}.ba-map{background:var(--ba-l);color:var(--ba-r)}.th-map{background:var(--th-l);color:var(--th-g)}
+/* FOOD & TIPS */
+.food-section{background:white;border-radius:14px;padding:20px 22px;box-shadow:var(--shadow);margin-bottom:22px}
+.food-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:600;margin-bottom:12px}
+.food-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.food-card{border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.food-photo{width:100%;height:130px;object-fit:cover;display:block}
+.food-photo-blank{width:100%;height:130px;background:#f5f0ea;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:11px}
+.food-label{padding:8px 12px;font-size:12px;font-weight:500;background:white}
+.food-items{display:flex;gap:10px;flex-wrap:wrap}
+.food-item{display:flex;align-items:center;gap:7px;background:var(--cream);border-radius:8px;padding:7px 13px;font-size:13px;font-weight:500}
+.tip-box{border-radius:10px;padding:12px 16px;font-size:13px;line-height:1.7;display:flex;gap:10px;align-items:flex-start}
+.jp-tip{background:var(--jp-l);color:#3a5a1a}.ba-tip{background:var(--ba-l);color:#7a2a00}.th-tip{background:var(--th-l);color:#6a4a00}
+.tip-icon{font-size:17px;flex-shrink:0;margin-top:1px}
+.section-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#bbb;font-weight:500;margin:24px 0 14px;display:flex;align-items:center;gap:10px}
+.section-label::after{content:'';flex:1;height:1px;background:#e8e0d4}
+/* ─── COMPARISON ─── */
+.dest-tab.active-cmp{color:#c8b8f0;border-left-color:#9b7fd4;background:rgba(155,127,212,.1)}
+.cmp-panel{display:none;min-height:100vh;background:var(--cream)}
+.cmp-panel.active{display:block}
+.cmp-hero{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);padding:40px 40px 32px;color:white}
+.cmp-hero h1{font-family:'Playfair Display',serif;font-size:30px;margin-bottom:8px}
+.cmp-hero p{font-size:13px;opacity:.75;line-height:1.6}
+.cmp-section{padding:32px 40px;border-bottom:1px solid #e8e0d4}
+.cmp-section h2{font-family:'Playfair Display',serif;font-size:20px;margin-bottom:20px;color:#1a1a1a}
+.trips-overview{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.trip-card{border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.trip-card-header{padding:20px;color:white;font-family:'Playfair Display',serif}
+.trip-card-header h3{font-size:17px;font-weight:700;margin-bottom:4px}
+.trip-card-header .sub{font-size:11px;opacity:.85}
+.jp-header{background:linear-gradient(135deg,#2D5016,#6B9E3E)}
+.ba-header{background:linear-gradient(135deg,#8B2E00,#D4581A)}
+.th-header{background:linear-gradient(135deg,#7B5A00,#C49A00)}
+.trip-card-body{background:white;padding:18px}
+.trip-highlights{list-style:none;display:flex;flex-direction:column;gap:7px}
+.trip-highlights li{font-size:13px;color:#555;display:flex;gap:8px;align-items:flex-start;line-height:1.6}
+.trip-highlights li span.ck{flex-shrink:0;margin-top:2px;font-weight:700}
+.jp-card .ck{color:#6B9E3E}.ba-card .ck{color:#D4581A}.th-card .ck{color:#C49A00}
+.cmp-table-wrap{overflow-x:auto}
+.cmp-table{width:100%;border-collapse:collapse;font-size:13px}
+.cmp-table th{padding:12px 16px;text-align:left;font-weight:600;white-space:nowrap;font-size:12px}
+.cmp-table td{padding:12px 16px;border-top:1px solid #f0ece6;vertical-align:top;line-height:1.65}
+.cmp-table tr:hover td{background:#faf8f5}
+.cmp-table .lc{background:#f7f4f0;font-weight:600;color:#444;font-size:11px;letter-spacing:.5px;white-space:nowrap}
+.jp-col-h{background:#EEF4E8;color:#2D5016;border-bottom:3px solid #6B9E3E}
+.ba-col-h{background:#FDF1E8;color:#8B2E00;border-bottom:3px solid #D4581A}
+.th-col-h{background:#FDF8E8;color:#7B5A00;border-bottom:3px solid #C49A00}
+.stars{color:#f0b430;letter-spacing:1px;font-size:13px}
+.cost-big{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;display:block;margin-bottom:2px}
+.jp-cost{color:#2D5016}.ba-cost{color:#8B2E00}.th-cost{color:#7B5A00}
+.badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:11px;font-weight:600;margin:2px 2px 0 0}
+.b-easy{background:#d4f0e8;color:#1a6b4a}.b-med{background:#fde8cc;color:#8B4500}.b-high{background:#fde0e0;color:#8B0000}
+.b-rain{background:#dce8fd;color:#1a3a6b}.b-ok{background:#e8f0fd;color:#2a4a8b}
+.rec-box{background:linear-gradient(135deg,#1a1a2e,#0f3460);border-radius:14px;padding:28px;color:white;margin-top:0}
+.rec-box h3{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:16px}
+.rec-items{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.rec-item{background:rgba(255,255,255,.09);border-radius:10px;padding:16px}
+.rec-item h4{font-size:13px;font-weight:700;margin-bottom:8px}
+.rec-item p{font-size:12px;opacity:.72;line-height:1.7}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="sidebar-title">家庭旅遊<br>2025 行程比較</div>
+  <div class="dest-tab active-cmp" onclick="switchDest('cmp')" id="tab-cmp"><span class="flag">📊</span><div class="dest-name">行程比較<span class="dest-sub">特色 × 費用 × 氣候</span></div></div>
+  <div class="dest-tab" onclick="switchDest('jp')" id="tab-jp"><span class="flag">🇯🇵</span><div class="dest-name">日本北九州<span class="dest-sub">7天 美食 × 溫泉</span></div></div>
+  <div class="dest-tab" onclick="switchDest('bali')" id="tab-bali"><span class="flag">🇮🇩</span><div class="dest-name">峇里島<span class="dest-sub">7天 含9/10婚禮</span></div></div>
+  <div class="dest-tab" onclick="switchDest('thai')" id="tab-thai"><span class="flag">🇹🇭</span><div class="dest-name">泰國曼谷<span class="dest-sub">7天 市集 × 水鄉</span></div></div>
+  <div class="sidebar-footer">9月 或 10月出發<br>一週假期</div>
+</aside>
+
+<main class="main">
+<!-- ══════════════ COMPARISON ══════════════ -->
+<div id="dest-cmp" class="cmp-panel active">
+  <div class="cmp-hero">
+    <h1>📊 三個行程完整比較</h1>
+    <p>整理三趟旅程的特色、差異與預估費用，幫助爸媽更輕鬆做決定。<br>每個目的地都有各自的亮點，沒有「最好」的選擇，只有「最適合」的選擇！</p>
+  </div>
+
+  <!-- TRIP SUMMARIES -->
+  <div class="cmp-section">
+    <h2>✨ 各行程特色總結</h2>
+    <div class="trips-overview">
+      <div class="trip-card jp-card">
+        <div class="trip-card-header jp-header">
+          <h3>🇯🇵 日本北九州 7天</h3>
+          <p class="sub">福岡 → 長崎 → 佐世保 → 阿蘇 → 由布院 → 別府</p>
+        </div>
+        <div class="trip-card-body">
+          <ul class="trip-highlights">
+            <li><span class="ck">✓</span>以「吃」為主軸，和牛燒肉、各式海鮮、壽司、博多拉麵、水炊雞，每天都有驚喜</li>
+            <li><span class="ck">✓</span>九十九島遊覽船 + 阿蘇火山，兩個截然不同的頂級自然奇景</li>
+            <li><span class="ck">✓</span>由布院溫泉旅館入住，懷石料理 + 露天風呂，最舒適的放鬆體驗</li>
+            <li><span class="ck">✓</span>太宰府天滿宮或長崎哥拉巴園，文化歷史兼具</li>
+            <li><span class="ck">✓</span>自駕路線，行程彈性最高，沿途景色也很精彩</li>
+            <li><span class="ck">✓</span>台灣人最熟悉的旅遊環境，安全、衛生、方便</li>
+          </ul>
+        </div>
+      </div>
+      <div class="trip-card ba-card">
+        <div class="trip-card-header ba-header">
+          <h3>🇮🇩 峇里島 7天</h3>
+          <p class="sub">含 9/10 婚禮 · 烏布 → 海神廟 → 金巴蘭</p>
+        </div>
+        <div class="trip-card-body">
+          <ul class="trip-highlights">
+            <li><span class="ck">✓</span>配合 9/10 婚禮最省機票的行程，全家共同出遊的好機會</li>
+            <li><span class="ck">✓</span>德格拉朗梯田、海神廟日落、金巴蘭海灘海鮮，視覺衝擊感最強</li>
+            <li><span class="ck">✓</span>蘇卡瓦提藝術市集可以盡情砍價，爸媽最愛的市集體驗</li>
+            <li><span class="ck">✓</span>Pool Villa 讓爸媽在私人泳池悠閒度假，步調最輕鬆</li>
+            <li><span class="ck">✓</span>克差舞傳統表演，文化震撼感強</li>
+            <li><span class="ck">✓</span>整趟由包車司機接送，完全不用自己擔心交通</li>
+          </ul>
+        </div>
+      </div>
+      <div class="trip-card th-card">
+        <div class="trip-card-header th-header">
+          <h3>🇹🇭 泰國曼谷 7天</h3>
+          <p class="sub">曼谷市區 + 周邊一日遊</p>
+        </div>
+        <div class="trip-card-body">
+          <ul class="trip-highlights">
+            <li><span class="ck">✓</span>市集控必去！丹嫩水上市集 + 洽圖洽 + 安帕瓦，市集體驗最豐富</li>
+            <li><span class="ck">✓</span>安帕瓦螢火蟲（9–10月旺季），三趟行程中最難得的自然奇景</li>
+            <li><span class="ck">✓</span>大城古城日遊，UNESCO 世界遺產，歷史氛圍濃厚</li>
+            <li><span class="ck">✓</span>Somboon 米其林推薦咖哩蟹 + Thipsamai Pad Thai，頂級泰式美食</li>
+            <li><span class="ck">✓</span>整趟行程不需要轉機移動，最輕鬆省力</li>
+            <li><span class="ck">✓</span>三趟行程中費用最親民，預算彈性最大</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <div class="cmp-section">
+    <h2>🔍 詳細項目比較</h2>
+    <div class="cmp-table-wrap">
+      <table class="cmp-table">
+        <thead>
+          <tr>
+            <th class="lc" style="width:160px">比較項目</th>
+            <th class="jp-col-h">🇯🇵 日本北九州</th>
+            <th class="ba-col-h">🇮🇩 峇里島</th>
+            <th class="th-col-h">🇹🇭 泰國曼谷</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="lc">🏃 體力耗費程度</td>
+            <td><span class="stars">★★★☆☆</span> 中等<br><span class="badge b-med">自駕移動多</span><span class="badge b-med">景點間需步行</span></td>
+            <td><span class="stars">★★☆☆☆</span> 輕鬆<br><span class="badge b-easy">全程包車</span><span class="badge b-easy">步調悠閒</span></td>
+            <td><span class="stars">★★★☆☆</span> 中等<br><span class="badge b-med">高溫下步行多</span><span class="badge b-med">市集逛逛費腳力</span></td>
+          </tr>
+          <tr>
+            <td class="lc">🏔 景點類型</td>
+            <td>活火山 × 海島奇景<br>溫泉旅館 × 港灣風景<br>歷史庭園 × 神社參道</td>
+            <td>世界級梯田景觀<br>海上廟宇夕陽<br>熱帶雨林猴子森林</td>
+            <td>傳統水上市集<br>UNESCO 古城遺址<br>河濱夜市廣場</td>
+          </tr>
+          <tr>
+            <td class="lc">🍽 食物類型</td>
+            <td>和牛燒肉 · 各式海鮮<br>博多拉麵 · 壽司<br>水炊雞 · 明太子料理</td>
+            <td>金巴蘭海灘海鮮燒烤<br>峇里烤乳豬<br>印尼傳統料理</td>
+            <td>炒河粉 · 咖哩蟹<br>Tom Yum 酸辣海鮮湯<br>水上市集現烤小食</td>
+          </tr>
+          <tr>
+            <td class="lc">🚗 交通方便度</td>
+            <td><span class="stars">★★★★☆</span><br>自駕高速公路直達<br>不自駕可搭 JR 特急<br>福岡市區地鐵方便</td>
+            <td><span class="stars">★★★☆☆</span><br>全程需包車<br>景點間距離遠<br>但有司機完全不用擔心</td>
+            <td><span class="stars">★★★★☆</span><br>BTS + MRT 覆蓋廣<br>Grab 叫車安全便利<br>郊區需包車/一日遊</td>
+          </tr>
+          <tr>
+            <td class="lc">🌤 9–10月氣候</td>
+            <td>🌡 平均 22–28°C<br><span class="badge b-rain">偶有颱風風險</span><br><span class="badge b-ok">10月楓葉季節</span></td>
+            <td>🌡 平均 27–32°C<br><span class="badge b-ok">9月乾季尾端</span><br><span class="badge b-rain">偶有短暫陣雨</span></td>
+            <td>🌡 平均 29–34°C<br><span class="badge b-rain">雨季（常午後雷陣雨）</span><br><span class="badge b-med">高溫潮濕</span></td>
+          </tr>
+          <tr>
+            <td class="lc">💬 語言溝通</td>
+            <td><span class="stars">★★★☆☆</span><br>英文標示完善<br>在地人英文有限<br>台灣人可用中文部分溝通</td>
+            <td><span class="stars">★★★★☆</span><br>觀光區英文普遍<br>包車司機通英文<br>市集需稍微比手畫腳</td>
+            <td><span class="stars">★★★★☆</span><br>觀光區英文普遍<br>餐廳多有圖片菜單<br>Grab 可選中文</td>
+          </tr>
+          <tr>
+            <td class="lc">💰 每人預估總費用<br><small style="color:#999;font-weight:400">（含機票、住宿、<br>餐飲、交通、活動）</small></td>
+            <td><span class="cost-big jp-cost">NT$45,000–58,000</span>
+              機票 NT$15,000–22,000<br>
+              住宿 NT$13,000–16,000<br>
+              餐飲 NT$7,000–10,000<br>
+              交通 NT$5,000–7,000<br>
+              活動/購物 NT$5,000–8,000
+            </td>
+            <td><span class="cost-big ba-cost">NT$32,000–48,000</span>
+              機票 NT$10,000–18,000<br>
+              Villa（三人分攤）NT$12,000–18,000<br>
+              餐飲 NT$4,000–6,000<br>
+              包車 NT$3,000<br>
+              活動/購物 NT$3,000–5,000
+            </td>
+            <td><span class="cost-big th-cost">NT$28,000–42,000</span>
+              機票 NT$8,000–15,000<br>
+              住宿 NT$9,000–14,000<br>
+              餐飲 NT$4,000–6,000<br>
+              交通 NT$2,500–3,500<br>
+              活動/購物 NT$4,000–7,000
+            </td>
+          </tr>
+          <tr>
+            <td class="lc">🛒 購物 / 市集體驗</td>
+            <td><span class="stars">★★★☆☆</span><br>藥妝店 · 明太子 · 伴手禮<br>品質高，種類精</td>
+            <td><span class="stars">★★★☆☆</span><br>蘇卡瓦提手工藝品市集<br>砍價體驗有趣</td>
+            <td><span class="stars">★★★★★</span><br>洽圖洽 10,000+ 攤<br>水上市集 × 安帕瓦<br>購物體驗最豐富</td>
+          </tr>
+          <tr>
+            <td class="lc">🐟 海鮮豐富度</td>
+            <td><span class="stars">★★★★★</span><br>長濱市場 · 九十九島<br>海鮮料理種類最豐富</td>
+            <td><span class="stars">★★★★☆</span><br>金巴蘭沙灘海鮮晚宴<br>龍蝦、大蝦、烤魚</td>
+            <td><span class="stars">★★★★☆</span><br>Somboon 咖哩蟹<br>安帕瓦現烤大蝦</td>
+          </tr>
+          <tr>
+            <td class="lc">🌿 自然景觀</td>
+            <td><span class="stars">★★★★★</span><br>阿蘇火山（全球罕見）<br>九十九島（208座島嶼）<br>由布院金鱗湖晨霧</td>
+            <td><span class="stars">★★★★★</span><br>德格拉朗梯田（世界級）<br>海神廟日落（峇里圖騰）<br>熱帶雨林生態</td>
+            <td><span class="stars">★★★☆☆</span><br>安帕瓦螢火蟲（9–10月）<br>水上市集水鄉風情<br>大城古城歷史氛圍</td>
+          </tr>
+          <tr>
+            <td class="lc">🏥 安全 / 醫療便利</td>
+            <td><span class="stars">★★★★★</span><br>醫療體系完善<br>衛生安全無虞<br>台灣旅客保險涵蓋好</td>
+            <td><span class="stars">★★★☆☆</span><br>峇里島觀光設施完善<br>但醫療資源較有限<br>建議備足旅遊保險</td>
+            <td><span class="stars">★★★★☆</span><br>曼谷有多家國際醫院<br>整體安全環境佳<br>注意食物衛生</td>
+          </tr>
+          <tr>
+            <td class="lc">💎 整體性價比</td>
+            <td><span class="stars">★★★★☆</span><br>費用最高但體驗也最精緻<br>安全感 × 食材品質無與倫比</td>
+            <td><span class="stars">★★★★☆</span><br>適合有婚禮行程順道旅遊<br>省機票但Villa費用稍高</td>
+            <td><span class="stars">★★★★★</span><br>費用最親民<br>市集 × 美食 × 文化都豐富</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- RECOMMENDATION -->
+  <div class="cmp-section" style="border-bottom:none;padding-bottom:60px">
+    <div class="rec-box">
+      <h3>💡 給爸媽的選擇參考</h3>
+      <div class="rec-items">
+        <div class="rec-item">
+          <h4>🇯🇵 選日本，如果…</h4>
+          <p>最重視「吃得好」，對和牛、新鮮海鮮、日本料理很期待；喜歡在乾淨舒適的環境中旅遊；想體驗阿蘇火山這種世界級自然奇景；以及特別想泡溫泉放鬆。費用最高，但體驗也最精緻。</p>
+        </div>
+        <div class="rec-item">
+          <h4>🇮🇩 選峇里島，如果…</h4>
+          <p>配合 9/10 婚禮機票最省錢；想住 Pool Villa 悠閒曬太陽；期待看到德格拉朗梯田和海神廟日落這種明信片等級的美景；享受沙灘海鮮晚宴的浪漫氣氛。步調最輕鬆，適合純度假。</p>
+        </div>
+        <div class="rec-item">
+          <h4>🇹🇭 選曼谷，如果…</h4>
+          <p>爸媽愛逛市集，要去洽圖洽才過癮；預算考量希望費用親民一些；想看螢火蟲這種難得體驗（9–10月旺季）；或想嘗試泰式料理。整趟不用轉機，是三個選項中最省力的安排。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="dest-jp" class="destination-panel">
+  <div class="hero">
+    <div class="hero-bg" style="background-image:url('https://lh3.googleusercontent.com/place-photos/AJRVUZMgktQIeCAg05LVd-dituiAx-IlIov96oQp4_73NAsXFVD0NQPkeqDkorx_nnYkBsOj_mk__iOE9i1sCJ58mAlerx2NvIkrca3hpRjvlx6jTR-ri-hKs4nTnJkCeIXAZPP-MNdKHtkCLOQ7sA=s1200-w1200-h600')"></div>
+    <div class="hero-content">
+      <span class="hero-badge jp-badge">北九州 7 Days</span>
+      <h1>日本北九州<br>美食 × 自然 × 溫泉</h1>
+      <p>福岡 → 長崎 → 佐世保 → 阿蘇火山 → 由布院 → 別府 → 福岡</p>
+    </div>
+  </div>
+  <div class="day-tabs-bar" id="jp-tabs">
+    <div class="day-tab active-jp" onclick="switchDay('jp',1)">Day 1<br>福岡 到達</div>
+    <div class="day-tab" onclick="switchDay('jp',2)">Day 2<br>福岡 ± 長崎</div>
+    <div class="day-tab" onclick="switchDay('jp',3)">Day 3<br>佐世保</div>
+    <div class="day-tab" onclick="switchDay('jp',4)">Day 4<br>阿蘇火山</div>
+    <div class="day-tab" onclick="switchDay('jp',5)">Day 5<br>由布院①</div>
+    <div class="day-tab" onclick="switchDay('jp',6)">Day 6<br>由布院②+別府</div>
+    <div class="day-tab" onclick="switchDay('jp',7)">Day 7<br>返回福岡</div>
+  </div>
+
+  <!-- JP DAY 1 -->
+  <div class="day-panel active" id="jp-day-1">
+    <div class="day-header"><div class="day-num jp-num">01</div><div class="day-title-wrap"><h2>抵達福岡 — 長濱市場 × 和牛燒肉</h2><p>📍 福岡市 博多</p></div></div>
+    <div class="route-banner">
+      <span class="route-stop"><span class="route-dot jp-dot"></span>抵達福岡機場</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot jp-dot"></span>長濱鮮魚市場（午餐）</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot jp-dot"></span>博多周邊散步</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot jp-dot"></span>和牛燒肉 or 海鮮晚餐（二選一）</span>
+    </div>
+    <div class="places-grid">
+      <div class="place-card">
+        <img class="card-photo" src="https://lh3.googleusercontent.com/place-photos/AJRVUZOQGKBZS8zsSZLaSRJJQcMlBWAjGnb7zjSrXopb1OyEdUZks_e78ykieCDHCwP1OiyWdEWZRJ5v0BYDd05PutQlFOeuPpOwYmaVu9c__J-24T2rdyOyIBxsaXHQgR0Vm6XBzvBYhzsFk9Cm6Tk=s800-w800-h600" alt="長濱鮮魚市場" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+        <div class="card-body">
+          <span class="card-tag jp-tag">市場 / 午餐</span>
+          <div class="card-name">長濱鮮魚市場</div>
+          <div class="card-sub">📍 福岡市中央區長濱 ⏰ 08:00–16:30（週日休）</div>
+          <p class="card-desc">福岡最具規模的鮮魚批發市場，一樓設有多家海鮮食堂，以超新鮮的刺身定食與海鮮丼聞名。市場熱鬧氛圍濃厚，是感受福岡「海港之城」風情的最佳起點，推薦抵達後直接到此享用午餐。</p>
+          <div class="card-time">⏰ 建議停留 60–90 分鐘</div>
+          <a href="https://maps.google.com/?cid=1746923616978310623" target="_blank" class="map-link jp-map">🗺 Google Maps</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">博多周邊散步</div>
+    <div class="places-grid">
+      <div class="place-card">
+        <img class="card-photo" src="https://lh3.googleusercontent.com/places/ANXAkqGsq5UvF8k4qCx2_RBsMnY32DPStUbt4_ryk9M5wMt7pN9iwdQzkTN8GcbRvaW0FoaVOpr43SKPBIQQ8KSIoWJ2XvE2k2GTWeM=s800-w800-h600" alt="Canal City" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+        <div class="card-body">
+          <span class="card-tag jp-tag">購物 / 噴泉秀</span>
+          <div class="card-name">Canal City Hakata</div>
+          <div class="card-sub">📍 博多區住吉 ⭐ 4.2 / 53,000+ 評價 ⏰ 10:00–21:00</div>
+          <p class="card-desc">博多最具特色的室外購物中心，以運河水道貫穿中央廣場，定時舉辦音樂噴泉秀，配合季節主題燈光，氣氛十足。內有 Uniqlo、無印良品、Ghibli 商店、藥妝及豐富餐廳選擇，是下午散步購物的好去處。</p>
+          <div class="card-time">⏰ 下午散步逛逛，1–2 小時</div>
+        </div>
+      </div>
+      <div class="place-card">
+        <img class="card-photo" src="https://lh3.googleusercontent.com/place-photos/AJRVUZM3NsSulo_Gb-yvUrrHlbIxRjJJXxlbgIdofj2TYNzG1hDlkF8L0XHn17UGBNVZWs4VrG53DyP67a7tlcWRQkznEG0dp8Ti-onnqWuh1WFllRaXa06wDU4Cmal641gZ3EGtoJtAhgT5gyRKRXo=s800-w800-h600" alt="中洲屋台" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+        <div class="card-body">
+          <span class="card-tag jp-tag">夜晚文化 / 屋台</span>
+          <div class="card-name">中洲屋台街</div>
+          <div class="card-sub">📍 中洲 那珂川河畔 ⏰ 約 18:00–翌晨</div>
+          <p class="card-desc">福岡最著名的「屋台文化」發源地，沿那珂川畔排列著數十家露天小食攤，賣著博多拉麵、烤串、明太子料理等。入夜後燈火通明，與鄰座陌生旅人攀談已是此地傳統，是感受福岡夜生活最真實的方式。</p>
+          <div class="card-time">⏰ 飯後夜遊散步，隨意體驗</div>
+        </div>
+      </div>
+      <div class="place-card">
+        <img class="card-photo" src="https://lh3.googleusercontent.com/places/ANXAkqGEGnEAcL6ayLHgvKTl0AY_k5noENGYn-es77feg_G0DIOa1tGx_mchgpEq93i5NDdpdgPaOPaZhQrTJ8DgRQFVx4u59Cl_c5c=s800-w800-h600" alt="那珂川遊覽船" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+        <div class="card-body">
+          <span class="card-tag jp-tag">可選加入 / 遊覽船</span>
+          <div class="card-name">那珂川河遊覽船</div>
+          <div class="card-sub">📍 西中洲 ⭐ 4.3 / 680+ 評價 ⏰ 11:00–21:30</div>
+          <p class="card-desc">搭乘45分鐘的夜間遊覽船，沿那珂川與博多灣欣賞福岡夜景，船上有現場演奏和歌唱表演，非常有氣氛。票價約 ¥2,000–3,000，建議提前預約。在第一晚若有體力，是一個優質的夜間加碼選擇。</p>
+          <div class="card-time">⏰ 建議搭 19:00 場，約 45 分鐘</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">晚餐選擇</div>
+    <div class="opt-bar"><span class="opt-bar-label">選項</span>
+      <button class="opt-btn jp-active" onclick="switchOpt(this,'jp-d1-opt1','jp')">🥩 選項 A：和牛燒肉</button>
+      <button class="opt-btn" onclick="switchOpt(this,'jp-d1-opt2','jp')">🐟 選項 B：博多海鮮料理</button>
+    </div>
+    <div id="jp-d1-opt1" class="opt-panel active">
+      <div class="places-grid">
+        <div class="place-card">
+          <img class="card-photo" src="https://lh3.googleusercontent.com/places/ANXAkqG0R-7tj66xZFmDLj_qp5mea94UuqyOB3Q8lNbZXjQo-8jt07gi1YYnf2PI9aa4FBGNOuRnjZvQhLrky29yCHGEe0DqFUevIio=s800-w800-h600" alt="肉一" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+          <div class="card-body">
+            <span class="card-tag jp-tag">⭐ 推薦 / 和牛燒肉</span>
+            <div class="card-name">にくいち（肉一）博多店</div>
+            <div class="card-sub">📍 博多站南 ⭐ 4.4 / 2300+ 評價 ⏰ 16:00–深夜</div>
+            <p class="card-desc">博多人氣黑毛和牛燒肉店，主打多品種和牛拼盤，可一次品嘗里肌、牛舌、肋眼等多個部位。附有英文平板點餐，服務親切。CP值在博多燒肉店中屬高水準，是帶爸媽體驗日本和牛的絕佳首選。</p>
+            <div class="card-time">⏰ 建議 17:30 前往，熱門需提前訂位</div>
+            <a href="https://maps.google.com/?cid=8721291864666113538" target="_blank" class="map-link jp-map">🗺 Google Maps</a>
+          </div>
+        </div>
+        <div class="place-card">
+          <img class="card-photo" src="https://lh3.googleusercontent.com/place-photos/AJRVUZMhbqQouo9pbOJkTNbWen6osb_wvGB_-P1pTv9qhadKZz0EfC8_F8EkRNwCt6LM9D9jxqAMmvSzD72JUnHQOU9VcJQ4BPzjBcDTMrNCg12D2XNplLVrNaSOwqAkHdEzJ4_woMqwrz6GES-p0SSRK1h2bQ=s800-w800-h600" alt="やきにくのバクロ" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+          <div class="card-body">
+            <span class="card-tag jp-tag">和牛燒肉 / 午間亦有</span>
+            <div class="card-name">やきにくのバクロ 博多店</div>
+            <div class="card-sub">📍 博多 住吉 ⭐ 4.4 / 1000+ 評價 ⏰ 午間11:30 / 晚間17:00</div>
+            <p class="card-desc">以「乾式熟成和牛」著稱的博多燒肉名店，提供含 A5 霜降牛肉的套餐選擇。牛肉風味醇厚，部位介紹詳盡，適合帶爸媽細細品嘗每個部位的差異。午餐亦有供應，是一天中彈性最高的燒肉選擇。</p>
+            <div class="card-time">⏰ 午餐 11:30 起、晚餐 17:00 起，建議訂位</div>
+            <a href="https://maps.google.com/?cid=210649419803789739" target="_blank" class="map-link jp-map">🗺 Google Maps</a>
+          </div>
+        </div>
+      </div>
+      <div class="tip-box jp-tip"><span class="tip-icon">🥩</span><span>和牛是日本最具代表性的飲食體驗之一。在台灣吃和牛的費用通常是日本的1.5–2倍，趁在日本享用非常划算。一般和牛套餐每人約 ¥4,000–8,000，含多個部位非常滿足。</span></div>
+    </div>
+    <div id="jp-d1-opt2" class="opt-panel">
+      <div class="places-grid">
+        <div class="place-card">
+          <img class="card-photo" src="https://lh3.googleusercontent.com/places/ANXAkqHHervy9E6L_eklJYrYlItQc0ansozOuqSCHOBl904sBF1FfLqum_MZ1Xd5Z-ujV588Wac-n9CFJuSiC_LTvlf_2fbnJdIK3_c=s800-w800-h600" alt="博多海鮮魚傳" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+          <div class="card-body">
+            <span class="card-tag jp-tag">海鮮料理</span>
+            <div class="card-name">博多海鮮 魚傳</div>
+            <div class="card-sub">📍 中洲 ⭐ 4.3 / 2900+ 評價 ⏰ 06:30–22:00</div>
+            <p class="card-desc">位於中洲河畔的人氣海鮮料理店，以明太子料理、海鮮丼、當季生魚片著稱，食材直送市場。全天候供應早餐至晚餐，服務親切且備有英文菜單，是融合福岡在地海鮮與博多名物的理想晚餐選擇。</p>
+            <div class="card-time">⏰ 建議 18:00 前往，中洲夜晚氣氛最佳</div>
+            <a href="https://maps.google.com/?cid=5329648831249614543" target="_blank" class="map-link jp-map">🗺 Google Maps</a>
+          </div>
+        </div>
+        <div class="place-card">
+          <img class="card-photo" src="https://lh3.googleusercontent.com/place-photos/AJRVUZP0NAIIMeFsMkUXUp6_JVB8-Fu9df-2fFhjOig6HPr_QwUPLwoYOBJDO83mCwn8RQHp4gJfMcbvpW0JOLL4W9u14wkd2xadnBLgmSwSEoZ1o1DjHmegev_wMgkiX4NJTa_IudCeC3_yZL4oYd2DQDGMIA=s800-w800-h600" alt="一蘭拉麵" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+          <div class="card-body">
+            <span class="card-tag jp-tag">博多拉麵 / 宵夜</span>
+            <div class="card-name">一蘭拉麵 本社総本店</div>
+            <div class="card-sub">📍 中洲 ⭐ 4.2 / 12,500+ 評價 ⏰ 24小時</div>
+            <p class="card-desc">博多豚骨拉麵的代表性品牌，發祥地就在中洲。獨特的隔板式包廂讓每位客人專注享受碗中滋味，湯頭濃醇可依喜好客製化調整。中洲本店還設有夜間戶外表演，是飯後散步的好去處。</p>
+            <div class="card-time">⏰ 24小時營業，宵夜或晚餐皆宜</div>
+            <a href="https://maps.google.com/?cid=7524611293723795643" target="_blank" class="map-link jp-map">🗺 Google Maps</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tip-box jp-tip"><span class="tip-icon">✈️</span><span>福岡機場地鐵直達博多站只需 5 分鐘，是全日本最便利的機場之一。建議入住博多或天神一帶，步行即可抵達大多數餐廳與景點。</span></div>
+  </div>
+
+  <!-- JP DAY 2 -->
+  <div class="day-panel" id="jp-day-2">
+    <div class="day-header"><div class="day-num jp-num">02</div><div class="day-title-wrap"><h2>Day 2 — 太宰府天滿宮 或 長崎哥拉巴園</h2><p>📍 太宰府（福岡近郊） 或 長崎市</p></div></div>
+    <div class="opt-bar"><span class="opt-bar-label">行程選擇</span>
+      <button class="opt-btn jp-active" onclick="switchOpt(this,'jp-d2-opt1','jp')">⛩ 選項 A：太宰府天滿宮（福岡近郊）</button>
+      <button class="opt-btn" onclick="switchOpt(this,'jp-d2-opt2','jp')">🌿 選項 B：長崎哥拉巴園（前進長崎）</button>
+    </div>
+
+    <div id="jp-d2-opt1" class="opt-panel active">
+      <div class="route-banner">
+        <span class="route-stop"><span class="route-dot jp-dot"></span>福岡出發</span><span class="route-arrow">→</span>
+        <span class="route-stop"><span class="route-dot jp-dot"></span>太宰府（西鐵電車約40分）</span><span class="route-arrow">→</span>
+        <span class="route-stop"><span class="route-dot jp-dot"></span>天滿宮參拜 + 參道美食</span><span class="route-arrow">→</span>
+        <span class="route-stop"><span class="route-dot jp-dot"></span>下午返福岡 或 直接前往長崎</span>
+      </div>
+      <div class="places-grid">
+        <div class="place-card">
+          <img class="card-photo" src="https://lh3.googleusercontent.com/place-photos/AJRVUZNQKqnNcOK_dE5TpUauj3ZL8SbRZaPtjJhtVr-bsHBIKXdbGL82joNvWfffGi7LNZ5qKAP9iLbmRewGV1ALbd3hWZIRSQpGKI_Jr6eO8-_Rk_-iPVLs4IAT1I_Z5vgGCASr5fmfsmAE0lnvqpWL8N4j=s800-w800-h600" alt="太宰府天滿宮" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+          <div class="card-body">
+            <span class="card-tag jp-tag">⭐ 日本三大天滿宮</span>
+            <div class="card-name">太宰府天滿宮</div>
+            <div class="card-sub">📍 太宰府市宰府 ⭐ 4.5 / 42,000+ 評價 ⏰ 06:30–18:30</div>
+            <p class="card-desc">供奉學問之神菅原道真的著名神社，是日本最重要的天滿宮之一，每年吸引超過200萬人次參拜。梅花季（2月）更是盛況空前。神社前有長達500公尺的參道，兩旁林立伴手禮店與茶屋，其中名物「梅枝餅」在各家老店現烤現售，香氣四溢，是不可錯過的在地點心。</p>
+            <div class="card-time">⏰ 建議停留 2–3 小時（含參道）</div>
+            <a href="http://www.dazaifutenmangu.or.jp/" target="_blank" class="map-link jp-map">🌐 官方網站</a>
+          </div>
+        </div>
+        <div class="place-card">
+          <img class="card-photo" src="https://lh3.googleusercontent.com/place-photos/AJRVUZNtWaH6rXKiI4eIoGYfDxL_p3V5is38Y8V9So9BVlxszhcVc83Uc5kUcYX74srPKQoNSY0Eoo5Y0XPSyvuaTyQuvV3dfS6rm_VS_pzAQ47d-KimlWXKvMUqQwWpwfWXs4Ftyh6hNdU3Yk8b=s800-w800-h600" alt="九州國立博物館" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+          <div class="card-body">
+            <span class="card-tag jp-tag">加碼 / 步行可達</span>
+            <div class="card-name">九州國立博物館</div>
+            <div class="card-sub">📍 太宰府天滿宮旁 ⏰ 09:30–17:00（週一休）</div>
+            <p class="card-desc">緊鄰天滿宮的國立博物館，以亞洲文化交流史為主題，建築本身由玻璃帷幕與流線金屬構成，造型現代且引人注目。常設展覽免費開放部分區域，特展則需另購票。若天滿宮參觀完畢還有體力，可順遊此處感受一下。</p>
+            <div class="card-time">⏰ 可選擇性加入，約 60 分鐘</div>
+          </div>
+        </div>
+      </div>
+      <div class="food-section">
+        <div class="food-title">🍽 太宰府必吃</div>
+        <div class="food-items">
+          <div class="food-item"><span>🍡</span>梅枝餅（うめがえもち）現烤必買</div>
+          <div class="food-item"><span>🍜</span>博多拉麵（午餐返途）</div>
+        </div>
+      </div>
+      <div class="tip-box jp-tip"><span class="tip-icon">🚃</span><span>從天神出發搭乘西鐵電車至太宰府站，全程約 40 分鐘，車票約 ¥420，非常方便。不需自駕，當天可上午去太宰府，下午繼續前往長崎（自駕約 2 小時），行程銜接順暢。</span></div>
+    </div>
+
+    <div id="jp-d2-opt2" class="opt-panel">
+      <div class="route-banner">
+        <span class="route-stop"><span class="route-dot jp-dot"></span>福岡出發（自駕 2h 或 JR）</span><span class="route-arrow">→</span>
+        <span class="route-stop"><span class="route-dot jp-dot"></span>哥拉巴園</span><span class="route-arrow">→</span>
+        <span class="route-stop"><span class="route-dot jp-dot"></span>出島・長崎港散步</span><span class="route-arrow">→</span>
+        <span class="route-stop"><span class="route-dot jp-dot"></span>什錦炒麵晚餐</span>
+      </div>
+      <div class="places-grid">
+        <div class="place-card">
+          <img class="card-photo" src="https://lh3.googleusercontent.com/place-photos/AJRVUZO5jM0J2ykv4h-elXGt9aquHfH7VCnZ6c37uZAjln_Sp5LedYBJrGn0Ys5FyMOkLBhi_myBzwqtGKqlNOQxklPt6A6BQcRVWuxWhz4rfVe9f9OxyE-HXO8QsSpC4tAoKYAMHgREvpYH5af5LdY1ls1_gQ=s800-w800-h600" alt="哥拉巴園" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+          <div class="card-body">
+            <span class="card-tag jp-tag">歷史景觀</span>
+            <div class="card-name">哥拉巴園 Glover Garden</div>
+            <div class="card-sub">📍 長崎市南山手 ⭐ 4.2 / 12,000+ 評價 ⏰ 08:00–20:00</div>
+            <p class="card-desc">俯瞰長崎港灣的西洋式歷史庭園，保存著 1863 年蘇格蘭商人 Thomas Glover 興建的日本最古老木造西式建築。園內設有電扶梯，行動方便。從高處可眺望整個長崎市區與港口全景，風光優美，是認識長崎「和洋交融」獨特文化的最佳起點。</p>
+            <div class="card-time">⏰ 建議停留 90–120 分鐘</div>
+            <a href="http://www.glover-garden.jp/" target="_blank" class="map-link jp-map">🌐 官方網站</a>
+          </div>
+        </div>
+        <div class="place-card">
+          <img class="card-photo" src="https://lh3.googleusercontent.com/place-photos/AJRVUZOPvtoUYqr1P7ZAwSJFr731d9MZwxTQqI53ag9w27NCxmzYvi8OdYhewuZNGdU2kl310kjqyaLX5e4Ob-h3JRUmLVToJezsgwWlQuC0qnwHE07ftyQlqnF_TW-kwCuD6zsrZ3c04bbQ31Ju1as=s800-w800-h600" alt="長崎什錦炒麵" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+          <div class="card-body">
+            <span class="card-tag jp-tag">長崎名物 / 晚餐</span>
+            <div class="card-name">中華大八 — 長崎什錦炒麵</div>
+            <div class="card-sub">📍 長崎市大黒町 ⭐ 4.3 / 1100+ 評價 ⏰ 11:30–14:30（週三、日休）</div>
+            <p class="card-desc">長崎在地人熱愛的老字號什錦炒麵（ちゃんぽん）食堂，湯頭鮮甜濃郁，配料豐富扎實。長崎什錦炒麵是日本三大特色拉麵之一，發源自長崎唐人街，與一般豚骨拉麵截然不同。份量慷慨，價格親民。</p>
+            <div class="card-time">⏰ 午餐時段造訪最佳，需排隊</div>
+            <a href="https://maps.google.com/?cid=8207608150042504157" target="_blank" class="map-link jp-map">🗺 Google Maps</a>
+          </div>
+        </div>
+      </div>
+      <div class="tip-box jp-tip"><span class="tip-icon">🚗</span><span>自駕走九州自動車道→長崎自動車道，約 2 小時。若不自駕，可搭 JR 特急「かもめ」約 1 小時 45 分，長崎站下車後哥拉巴園搭公車可達。</span></div>
+    </div>
+  </div>
+
+  <!-- JP DAY 3 -->
+  <div class="day-panel" id="jp-day-3">
+    <div class="day-header"><div class="day-num jp-num">03</div><div class="day-title-wrap"><h2>長崎 → 佐世保 — 九十九島海上巡遊</h2><p>📍 佐世保市（自駕約 1 小時）</p></div></div>
+    <div class="route-banner">
+      <span class="route-stop"><span class="route-dot jp-dot"></span>長崎出發</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot jp-dot"></span>九十九島遊覽船</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot jp-dot"></span>佐世保漢堡午餐</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot jp-dot"></span>海鮮晚餐</span>
+    </div>
+    <div class="places-grid">
+      <div class="place-card">
+        <img class="card-photo" src="https://lh3.googleusercontent.com/place-photos/AJRVUZNlezuDfn0Tf6U4uom3aQuBGRAfHomizM6z0XkWNHU_CU0lZG_7lPwLNhmPMr88RNI55vam_uLzoFlcbOuQPhjGNjhfs1OQIVi1w4VWVKSKCA8QjUpFtNtWkbNEv8whn1MKKqjftNAXmosc61o=s800-w800-h600" alt="九十九島" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+        <div class="card-body">
+          <span class="card-tag jp-tag">⭐ 壯觀自然</span>
+          <div class="card-name">九十九島珍珠海遊覽船</div>
+          <div class="card-sub">📍 佐世保市鹿子前町 ⭐ 4.2 / 5000+ 評價 ⏰ 09:00–18:00</div>
+          <p class="card-desc">搭乘約 50 分鐘遊覽船，穿梭於208座散落在翠藍海面上的小島之間，被譽為「西海的松島」。藍天白雲與島嶼錯落的景致令人心曠神怡，是整個北九州行程中最具震撼感的自然景觀之一。船上設有小賣部，可購買在地牡蠣伴手禮。</p>
+          <div class="card-time">⏰ 遊覽船 50 分鐘，整體停留 2–3 小時</div>
+          <a href="https://www.pearlsea.jp/" target="_blank" class="map-link jp-map">🌐 官網（可線上購票）</a>
+        </div>
+      </div>
+      <div class="place-card">
+        <div class="card-photo-blank">佐世保漢堡（暫無圖片）</div>
+        <div class="card-body">
+          <span class="card-tag jp-tag">在地名物</span>
+          <div class="card-name">佐世保漢堡</div>
+          <div class="card-sub">📍 佐世保市中心各家老店 ⏰ 午餐時段</div>
+          <p class="card-desc">二戰後受美軍文化影響誕生的在地名物，比一般漢堡更厚實飽滿，食材新鮮、手工製作，全程現點現做。「ヒカリ」和「LOG KIT」是當地最具歷史的老店，通常需稍等，但獨特風味絕對值得一嚐。</p>
+          <div class="card-time">⏰ 約 30–45 分鐘</div>
+        </div>
+      </div>
+    </div>
+    <div class="food-section">
+      <div class="food-title">🍽 今日美食</div>
+      <div class="food-items">
+        <div class="food-item"><span>🍔</span>佐世保漢堡（午餐）</div>
+        <div class="food-item"><span>🦞</span>佐世保活海鮮燒烤（晚餐）</div>
+        <div class="food-item"><span>🦪</span>九十九島牡蠣</div>
+      </div>
+    </div>
+    <div class="tip-box jp-tip"><span class="tip-icon">⛵</span><span>遊覽船在旺季（9–10月）建議提前預約，可於珍珠海官網線上購票。景色在晴天最為壯觀，出發前可確認當日天氣。</span></div>
+  </div>
+
+  <!-- JP DAY 4 -->
+  <div class="day-panel" id="jp-day-4">
+    <div class="day-header"><div class="day-num jp-num">04</div><div class="day-title-wrap"><h2>佐世保 → 阿蘇火山 — 壯闊大地</h2><p>📍 熊本縣阿蘇市（自駕約 3 小時）</p></div></div>
+    <div class="route-banner">
+      <span class="route-stop"><span class="route-dot jp-dot"></span>佐世保出發</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot jp-dot"></span>阿蘇中岳火山口</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot jp-dot"></span>千里草原自駕兜風</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot jp-dot"></span>前往由布院（水炊雞晚餐）</span>
+    </div>
+    <div class="places-grid">
+      <div class="place-card">
+        <img class="card-photo" src="https://lh3.googleusercontent.com/place-photos/AJRVUZMgktQIeCAg05LVd-dituiAx-IlIov96oQp4_73NAsXFVD0NQPkeqDkorx_nnYkBsOj_mk__iOE9i1sCJ58mAlerx2NvIkrca3hpRjvlx6jTR-ri-hKs4nTnJkCeIXAZPP-MNdKHtkCLOQ7sA=s800-w800-h600" alt="阿蘇火山" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+        <div class="card-body">
+          <span class="card-tag jp-tag">⭐ 活火山奇景</span>
+          <div class="card-name">阿蘇山 中岳火山口</div>
+          <div class="card-sub">📍 熊本縣阿蘇市 ⭐ 4.6 / 1500+ 評價</div>
+          <p class="card-desc">日本最具代表性的活火山，世界最大破火山口之一。驅車至停車場後步行即可近距離俯瞰冒著硫磺煙的翠綠火山湖，震撼感無與倫比。沿途的阿蘇草原（千里浜）在9–10月呈現金黃色調，車窗外的連綿風景本身就是一大享受。</p>
+          <div class="card-time">⏰ 建議停留 2–3 小時（含草原兜風）</div>
+        </div>
+      </div>
+      <div class="place-card">
+        <img class="card-photo" src="https://lh3.googleusercontent.com/places/ANXAkqG2GEuyFTk5zowc9_ZFER_8h_Tm3UWguazm1lh5aoWNxc2BfAnnESCLiTr9OEjnya0rDaqqDjcurHwfjYQ6IYk7lnqrcIfHPzE=s800-w800-h600" alt="水炊雞 とり田" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+        <div class="card-body">
+          <span class="card-tag jp-tag">⭐ 晚餐 / 博多名物</span>
+          <div class="card-name">博多水炊雞 とり田</div>
+          <div class="card-sub">📍 福岡市博多（可預訂）⭐ 4.3 / 1700+ 評價 ⏰ 11:30–23:00</div>
+          <p class="card-desc">博多傳統水炊雞鍋的知名店家，以清甜雞高湯為底，配上嫩滑雞肉、豆腐與季節蔬菜。骨頭慢熬的高湯營養豐富、不油膩，非常適合全家享用。最後以雜炊（雞湯粥）收尾，回味無窮。若從阿蘇返回途中路過福岡，可順道享用晚餐。</p>
+          <div class="card-time">⏰ 建議提前訂位（可官網或電話）</div>
+          <a href="https://toriden.com/" target="_blank" class="map-link jp-map">🌐 官方網站</a>
+        </div>
+      </div>
+    </div>
+    <div class="tip-box jp-tip"><span class="tip-icon">⚠️</span><span>阿蘇火山口可能因火山活動臨時關閉，出發前建議查詢熊本縣阿蘇火山博物館官網確認開放狀態（10月偶有警戒提升）。</span></div>
+  </div>
+
+  <!-- JP DAY 5 -->
+  <div class="day-panel" id="jp-day-5">
+    <div class="day-header"><div class="day-num jp-num">05</div><div class="day-title-wrap"><h2>由布院 Day 1 — 金鱗湖 × 入住溫泉旅館</h2><p>📍 大分縣由布市</p></div></div>
+    <div class="route-banner">
+      <span class="route-stop"><span class="route-dot jp-dot"></span>阿蘇出發（約 1.5h）</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot jp-dot"></span>入住溫泉旅館</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot jp-dot"></span>金鱗湖傍晚散步</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot jp-dot"></span>旅館懷石晚餐 + 溫泉</span>
+    </div>
+    <div class="places-grid">
+      <div class="place-card">
+        <img class="card-photo" src="https://lh3.googleusercontent.com/place-photos/AJRVUZM42R2SCA9RIuh1TBjSPyX8_EBRyyz31iX6wV1kReZyWn8o8pW4K2vH8-H_D1KjsJNrtMaow-1ZKsiBHGP9Nodfve_bp2bcmxiMVKEA9kGIAjyis5utXkgpIylSzTzzXDYpZloNxAeoo0v7NEvJkb9U=s800-w800-h600" alt="金鱗湖" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+        <div class="card-body">
+          <span class="card-tag jp-tag">自然景觀</span>
+          <div class="card-name">金鱗湖 Lake Kinrin</div>
+          <div class="card-sub">📍 由布市湯布院町川上 ⭐ 4.1 / 22,000+ 評價 ⏰ 全天</div>
+          <p class="card-desc">由布院最標誌性的湖景，名字源自「魚鱗在夕陽下閃閃發光」的美麗意象。傍晚光線最為迷人，湖畔有許多可愛咖啡廳和伴手禮店，適合漫步 30–60 分鐘。秋季（10月）周邊銀杏金黃，景色格外動人。</p>
+          <div class="card-time">⏰ 傍晚 16:00–17:30 散步最佳</div>
+        </div>
+      </div>
+      <div class="place-card">
+        <div class="card-photo-blank">溫泉旅館（暫無圖片）</div>
+        <div class="card-body">
+          <span class="card-tag jp-tag">⭐ 旅程亮點</span>
+          <div class="card-name">由布院溫泉旅館（強烈推薦）</div>
+          <div class="card-sub">📍 由布院町川上 ← 旅館密集區</div>
+          <p class="card-desc">由布院是日本三大溫泉地之一，強烈建議在此住一晚溫泉旅館（旅館/Ryokan）。入住通常含懷石料理晚餐與和式早餐，並可享用私人貸切露天風呂（全家同泡）。泉質為弱鹼性單純泉，對皮膚極佳，有「美人湯」之稱。費用約每人 ¥15,000–25,000（含二餐）。</p>
+          <div class="card-time">⏰ 入住 15:00，退房 11:00</div>
+        </div>
+      </div>
+    </div>
+    <div class="tip-box jp-tip"><span class="tip-icon">♨️</span><span>推薦旅館：「由布院 玉の湯」「亀の井別荘」均為老牌高品質旅館。旅館的貸切（包場）露天風呂可全家人一起泡，不受時間限制，是最放鬆的溫泉體驗。</span></div>
+  </div>
+
+  <!-- JP DAY 6 -->
+  <div class="day-panel" id="jp-day-6">
+    <div class="day-header"><div class="day-num jp-num">06</div><div class="day-title-wrap"><h2>由布院 Day 2 × 別府 — 晨霧 × 溫泉體驗</h2><p>📍 由布院 + 別府市（自駕約 30 分鐘）</p></div></div>
+    <div class="route-banner">
+      <span class="route-stop"><span class="route-dot jp-dot"></span>☀ 清晨 6:30 金鱗湖晨霧（必看）</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot jp-dot"></span>旅館早餐</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot jp-dot"></span>由布院伴手禮採購</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot jp-dot"></span>別府瓢簞溫泉</span>
+    </div>
+    <div class="places-grid">
+      <div class="place-card">
+        <img class="card-photo" src="https://lh3.googleusercontent.com/place-photos/AJRVUZM8VQBrMNrBDluJPRSQVoPvDjGiTxgjG91KWKHQTNpvOxfb15D7ilzK-wlSOdWrAZKt1wDd8cHSjg0P5g8ZqQ1H5zzDc9yDY9XiUrZHPCE5dJBlTSiO0nBXii24i9OuQt4MVOxzX01bIhXF6zt9zTmwtQ=s800-w800-h600" alt="金鱗湖晨霧" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+        <div class="card-body">
+          <span class="card-tag jp-tag">⭐ 清晨必看奇景</span>
+          <div class="card-name">金鱗湖晨霧 — 清晨 6:30</div>
+          <div class="card-sub">⏰ 日出前後 06:00–07:00 最佳</div>
+          <p class="card-desc">秋冬季節（10月尤其明顯）地熱湧泉與冷空氣碰撞，金鱗湖湖面飄起如夢似幻的白色霧氣，搭配背景中的由布岳山影，如詩如畫。這是由布院最難忘的免費自然奇景，只需早起 30 分鐘步行至湖邊即可欣賞。</p>
+          <div class="card-time">⏰ 清晨 06:00–07:00，免費參觀</div>
+        </div>
+      </div>
+      <div class="place-card">
+        <img class="card-photo" src="https://lh3.googleusercontent.com/place-photos/AJRVUZOdN_B1uvy0OnjcsxNWecFQjOAkb2tBBH5HEAAdKIL8Tw0QjpgBrNPEVk9xWgZ8ow1tsbdd4GSOSofa5Cyalh7AJghaxDwu2EoKvyevisB4H_dnwEOV6aZ7V-WvRPpD14CslbaMvgbrYALGroc=s800-w800-h600" alt="瓢簞溫泉" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+        <div class="card-body">
+          <span class="card-tag jp-tag">溫泉體驗</span>
+          <div class="card-name">瓢簞溫泉 Hyotan Onsen</div>
+          <div class="card-sub">📍 別府市鐵輪 ⭐ 4.2 / 6000+ 評價 ⏰ 09:00–深夜</div>
+          <p class="card-desc">別府最知名的溫泉設施之一，設有多種溫度的露天浴池、室內大浴場，以及別府特色「砂浴」（被埋入熱砂中 15 分鐘，極為放鬆）。亦設有私人貸切包廂，環境整潔，對觀光客友善，是繼由布院旅館溫泉後，再深入體驗別府溫泉文化的好去處。</p>
+          <div class="card-time">⏰ 建議停留 2 小時（含砂浴）</div>
+          <a href="http://www.hyotan-onsen.com/" target="_blank" class="map-link jp-map">🌐 官網（可預約）</a>
+        </div>
+      </div>
+    </div>
+    <div class="tip-box jp-tip"><span class="tip-icon">♨️</span><span>別府是日本溫泉湧出量最大的城市，鐵輪溫泉區還可選擇性加入「地獄巡遊」景點（血池地獄、海地獄等），各色溫泉池風景獨特，若時間允許可安排半天。</span></div>
+  </div>
+
+  <!-- JP DAY 7 -->
+  <div class="day-panel" id="jp-day-7">
+    <div class="day-header"><div class="day-num jp-num">07</div><div class="day-title-wrap"><h2>別府 → 福岡 — 採購 × 壽司告別餐</h2><p>📍 福岡市（自駕約 2 小時）</p></div></div>
+    <div class="route-banner">
+      <span class="route-stop"><span class="route-dot jp-dot"></span>別府出發</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot jp-dot"></span>福岡天神藥妝採購</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot jp-dot"></span>告別午餐（壽司 or 水炊）</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot jp-dot"></span>福岡機場</span>
+    </div>
+    <div class="places-grid">
+      <div class="place-card">
+        <div class="card-photo-blank">天神採購區（暫無圖片）</div>
+        <div class="card-body">
+          <span class="card-tag jp-tag">採購伴手禮</span>
+          <div class="card-name">福岡天神 / Canal City 採購</div>
+          <div class="card-sub">📍 福岡市天神 ⏰ 10:00–21:00</div>
+          <p class="card-desc">天神是福岡最大商業區，マツモトキヨシ、サンドラッグ等多家藥妝連鎖店集中於此。明太子伴手禮推薦老品牌「ふくや」或「やまや」，博多車站地下街也有豐富選擇，方便最後衝刺採購。</p>
+          <div class="card-time">⏰ 上午 10:00–13:00</div>
+        </div>
+      </div>
+      <div class="place-card">
+        <img class="card-photo" src="https://lh3.googleusercontent.com/place-photos/AJRVUZP0NAIIMeFsMkUXUp6_JVB8-Fu9df-2fFhjOig6HPr_QwUPLwoYOBJDO83mCwn8RQHp4gJfMcbvpW0JOLL4W9u14wkd2xadnBLgmSwSEoZ1o1DjHmegev_wMgkiX4NJTa_IudCeC3_yZL4oYd2DQDGMIA=s800-w800-h600" alt="一蘭拉麵" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+        <div class="card-body">
+          <span class="card-tag jp-tag">告別午餐選項</span>
+          <div class="card-name">一蘭拉麵 / 壽司 / 水炊雞</div>
+          <div class="card-sub">📍 博多站周邊 ⏰ 午餐時段</div>
+          <p class="card-desc">最後一餐可依整趟旅程未吃到的料理來選擇：一蘭博多豚骨拉麵（博多名物最後紀念）、迴轉壽司感受新鮮海膽與鮭魚卵，或博多水炊雞（とり田）以清甜雞湯為旅程畫下溫暖的句點。</p>
+          <div class="card-time">⏰ 午餐後約 14:00 前往機場</div>
+        </div>
+      </div>
+    </div>
+    <div class="food-section">
+      <div class="food-title">🎁 必買伴手禮清單</div>
+      <div class="food-items">
+        <div class="food-item"><span>🫙</span>明太子（辣味鱈魚卵）</div>
+        <div class="food-item"><span>🍡</span>梅枝餅（太宰府名物）</div>
+        <div class="food-item"><span>🍜</span>博多拉麵乾麵禮盒</div>
+        <div class="food-item"><span>💊</span>日本藥妝保養品</div>
+      </div>
+    </div>
+    <div class="tip-box jp-tip"><span class="tip-icon">✈️</span><span>福岡機場距博多站地鐵只需 5 分鐘，是全日本最便利的機場。建議 14:00 前出發前往機場，預留充裕時間辦理登機。</span></div>
+  </div>
+</div>
+
+<!-- ══════════════ BALI ══════════════ -->
+<div id="dest-bali" class="destination-panel">
+  <div class="hero">
+    <div class="hero-bg" style="background-image:url('https://lh3.googleusercontent.com/place-photos/AJRVUZNnUa7awKnrvAW2j4kzgZwVEV0jdLHQ0IKdPINAUoO1Nv7uMt385EypQzPskn766nmZDVSFDbBjEOwkGZmUe5cHfaHEI1WKiGzS-3-gXLuQ8XngDTQJTO55qeBTieW5hDmuWoAHzo_9RdTS6A=s1200-w1200-h600')"></div>
+    <div class="hero-content">
+      <span class="hero-badge ba-badge">Bali 7 Days · 含 9/10 婚禮</span>
+      <h1>峇里島<br>梯田 × 海鮮 × 文化</h1>
+      <p>烏布 → 蘇卡瓦提 → 海神廟 → 金巴蘭 → 努沙杜瓦 → 返程</p>
+    </div>
+  </div>
+  <div class="day-tabs-bar" id="bali-tabs">
+    <div class="day-tab active-bali" onclick="switchDay('bali',1)">Day 1<br>抵達+梯田</div>
+    <div class="day-tab" onclick="switchDay('bali',2)">Day 2<br>烏布市集</div>
+    <div class="day-tab" onclick="switchDay('bali',3)">Day 3<br>海神廟日落</div>
+    <div class="day-tab" onclick="switchDay('bali',4)">Day 4<br>金巴蘭海鮮</div>
+    <div class="day-tab" onclick="switchDay('bali',5)">Day 5<br>🎊 婚禮日</div>
+    <div class="day-tab" onclick="switchDay('bali',6)">Day 6<br>努沙杜瓦</div>
+    <div class="day-tab" onclick="switchDay('bali',7)">Day 7<br>返程</div>
+  </div>
+  <div class="day-panel active" id="bali-day-1">
+    <div class="day-header"><div class="day-num ba-num">01</div><div class="day-title-wrap"><h2>抵達峇里島 — 德格拉朗梯田</h2><p>📍 烏布（Ubud）</p></div></div>
+    <div class="route-banner">
+      <span class="route-stop"><span class="route-dot ba-dot"></span>抵達 DPS 機場</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot ba-dot"></span>入住烏布或 Seminyak</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot ba-dot"></span>德格拉朗梯田（下午）</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot ba-dot"></span>傳統晚餐</span>
+    </div>
+    <div class="places-grid">
+      <div class="place-card">
+        <img class="card-photo" src="https://lh3.googleusercontent.com/place-photos/AJRVUZNnUa7awKnrvAW2j4kzgZwVEV0jdLHQ0IKdPINAUoO1Nv7uMt385EypQzPskn766nmZDVSFDbBjEOwkGZmUe5cHfaHEI1WKiGzS-3-gXLuQ8XngDTQJTO55qeBTieW5hDmuWoAHzo_9RdTS6A=s800-w800-h600" alt="德格拉朗梯田" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+        <div class="card-body">
+          <span class="card-tag ba-tag">⭐ 必訪自然景觀</span>
+          <div class="card-name">德格拉朗梯田 Tegallalang</div>
+          <div class="card-sub">📍 Tegallalang, Gianyar ⭐ 4.4 / 53,000+ 評價 ⏰ 08:00–18:00</div>
+          <p class="card-desc">峇里島最著名的水稻梯田景觀，翠綠層疊的梯田與椰子樹構成絕美畫面。附近有多家懸崖咖啡廳，可一邊喝咖啡一邊俯瞰梯田全景。下午光線最佳，約 15:00 前往拍照效果一流，是峇里島自然環境體驗的最佳代表。</p>
+          <div class="card-time">⏰ 建議停留 1.5–2 小時</div>
+        </div>
+      </div>
+    </div>
+    <div class="food-section"><div class="food-title">🍽 今日美食</div><div class="food-items"><div class="food-item"><span>🍛</span>峇里島沙嗲 Sate</div><div class="food-item"><span>🍚</span>Nasi Goreng 炒飯</div><div class="food-item"><span>🥤</span>新鮮椰子汁</div></div></div>
+    <div class="tip-box ba-tip"><span class="tip-icon">🚗</span><span>峇里島建議全程包車，司機每天約 500,000–700,000 印尼盾（約 NT$1,000–1,400），可依行程彈性調整，比計程車安全實惠。</span></div>
+  </div>
+  <div class="day-panel" id="bali-day-2">
+    <div class="day-header"><div class="day-num ba-num">02</div><div class="day-title-wrap"><h2>烏布文化日 — 藝術市集 × 猴子森林</h2><p>📍 蘇卡瓦提 + 烏布</p></div></div>
+    <div class="places-grid">
+      <div class="place-card">
+        <img class="card-photo" src="https://lh3.googleusercontent.com/place-photos/AJRVUZOetHgJ1L3yVYsxMkfqSx2Dti7Sa93kOB1P7UExiDPnSIMH9O8ePlva1Lu6vqMy2BQHA7hgMsXeev9LfkCQlINixcGdu1GMpvfDfXu5qWIHQxbPnq6vIb1IddEGvxRj1J8VU_VyKkKlwcR6=s800-w800-h600" alt="蘇卡瓦提市集" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+        <div class="card-body">
+          <span class="card-tag ba-tag">⭐ 市集購物</span>
+          <div class="card-name">蘇卡瓦提藝術市集</div>
+          <div class="card-sub">📍 Gianyar ⭐ 4.4 / 11,700+ 評價 ⏰ 06:00–18:00</div>
+          <p class="card-desc">峇里島最著名的傳統紀念品大市集，商品從手工木雕、蠟染布料、銀飾、畫作、服裝一應俱全。砍價是常態，從標價砍到半價以下都屬正常範圍。建議攜帶現金（印尼盾），早上 09:00 前往氣溫較涼爽。</p>
+          <div class="card-time">⏰ 建議停留 2–3 小時</div>
+        </div>
+      </div>
+      <div class="place-card">
+        <div class="card-photo-blank">烏布猴子森林（暫無圖片）</div>
+        <div class="card-body">
+          <span class="card-tag ba-tag">自然體驗</span>
+          <div class="card-name">烏布神聖猴子森林</div>
+          <div class="card-sub">📍 Ubud, Gianyar ⏰ 09:00–18:00</div>
+          <p class="card-desc">一片鬱蔥熱帶雨林，棲息著 700 多隻長尾獼猴，配合古老印度教廟宇，自然與宗教氛圍並存。可近距離觀察猴子，但不建議攜帶食物或貴重物品入內。入場費約 IDR 80,000，是峇里島難得的生態體驗。</p>
+          <div class="card-time">⏰ 建議停留 60–90 分鐘</div>
+        </div>
+      </div>
+    </div>
+    <div class="food-section"><div class="food-title">🍽 今日美食</div><div class="food-items"><div class="food-item"><span>🐷</span>峇里烤乳豬 Babi Guling</div><div class="food-item"><span>🍜</span>在地 Warung 小館</div><div class="food-item"><span>🥭</span>熱帶水果拼盤</div></div></div>
+    <div class="tip-box ba-tip"><span class="tip-icon">🛍️</span><span>市集砍價心法：出「三折價」開始，最終通常成交在 4–5 折。不要表現太感興趣，多比較幾家再決定，是最有效的砍價方式。</span></div>
+  </div>
+  <div class="day-panel" id="bali-day-3">
+    <div class="day-header"><div class="day-num ba-num">03</div><div class="day-title-wrap"><h2>海神廟日落 — Tanah Lot</h2><p>📍 海神廟（Tanah Lot）+ Seminyak</p></div></div>
+    <div class="places-grid">
+      <div class="place-card">
+        <img class="card-photo" src="https://lh3.googleusercontent.com/place-photos/AJRVUZOgijOPMw1fc4sSko68NZ5qMjBSmRzxCChRiQhoif7d6S-4Zmgd4KB43eYjtBGOq6kOgSCkJYlg_NpSQX0IfxgSnCHt55PINzHzBmE0iUG0dwqtUswt5OpFq5YPExXxEGKtmYOU8CV5JCus0E=s800-w800-h600" alt="海神廟" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+        <div class="card-body">
+          <span class="card-tag ba-tag">⭐ 峇里島日落聖地</span>
+          <div class="card-name">海神廟 Tanah Lot</div>
+          <div class="card-sub">📍 Beraban, Tabanan ⭐ 4.6 / 102,000+ 評價 ⏰ 06:00–19:00</div>
+          <p class="card-desc">峇里島最標誌性的景點，建在海岸岩礁上的印度教寺廟，漲潮時宛如漂浮於海面。日落時分（17:30–18:30）夕陽將天空染成橙紅，廟宇剪影倒映其中，是峇里島最夢幻的時刻。入場費 IDR 75,000，建議 17:00 前抵達選好角度等待日落。</p>
+          <div class="card-time">⏰ 17:00 前抵達最佳</div>
+          <a href="https://www.tanahlot.id/" target="_blank" class="map-link ba-map">🌐 官網</a>
+        </div>
+      </div>
+      <div class="place-card">
+        <div class="card-photo-blank">Seminyak 海灘（暫無圖片）</div>
+        <div class="card-body">
+          <span class="card-tag ba-tag">海灘休閒</span>
+          <div class="card-name">Seminyak 海灘</div>
+          <div class="card-sub">📍 Seminyak, Badung ⏰ 全天</div>
+          <p class="card-desc">峇里島最時尚的海灘區，沙灘整潔寬廣，沿海有許多海灘酒吧與休閒餐廳。下午時段氣溫稍降，最適合散步吹海風，或在躺椅上點一杯新鮮椰子汁享受印度洋的壯闊海景。</p>
+          <div class="card-time">⏰ 下午 14:00–17:00 最舒適</div>
+        </div>
+      </div>
+    </div>
+    <div class="food-section"><div class="food-title">🍽 今日美食</div><div class="food-items"><div class="food-item"><span>🦞</span>Seminyak 海鮮餐廳</div><div class="food-item"><span>🌽</span>海神廟旁烤玉米小攤</div></div></div>
+    <div class="tip-box ba-tip"><span class="tip-icon">📸</span><span>海神廟日落是峇里島最熱門的攝影景點，週末人潮較多。建議 17:00 以前抵達找好位置，日落約 18:00–18:30 間最美，記得攜帶防蚊液。</span></div>
+  </div>
+  <div class="day-panel" id="bali-day-4">
+    <div class="day-header"><div class="day-num ba-num">04</div><div class="day-title-wrap"><h2>金巴蘭 — 沙灘海鮮晚宴</h2><p>📍 金巴蘭（Jimbaran）</p></div></div>
+    <div class="places-grid">
+      <div class="place-card">
+        <img class="card-photo" src="https://lh3.googleusercontent.com/place-photos/AJRVUZPGwQlCD4v7uMLS9lNP8z0UoHj_yEdWa_pESmxLrM5yRLm-vpCxg2KyXU2FtcUmH6CBWb4MaOogpIC3s47WUDegSI6-LNbsgaU0KO4uuZX-i0W4RIizrwG8AJjiMAxUAydMmHD3qNtnOFdWyjk=s800-w800-h600" alt="金巴蘭海鮮" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+        <div class="card-body">
+          <span class="card-tag ba-tag">⭐ 峇里島必吃海鮮</span>
+          <div class="card-name">金巴蘭沙灘海鮮晚宴</div>
+          <div class="card-sub">📍 Jimbaran Beach ⭐ 4.4 / 2400+ 評價 ⏰ 傍晚起</div>
+          <p class="card-desc">峇里島最經典的用餐體驗！在金巴蘭沙灘排排設置的桌椅上，腳踩細沙，眼前是夕陽與大海，餐桌旁炭火現烤龍蝦、大蝦、鮮魚、章魚。食材直接從市場挑選，烤法傳統，配上三色醬與白飯，滋味鮮美。喜愛海鮮的旅客在此用餐，通常讓人難忘。</p>
+          <div class="card-time">⏰ 建議 17:30 入座，配合日落</div>
+          <a href="https://maps.google.com/?cid=6912462180919030163" target="_blank" class="map-link ba-map">🗺 Google Maps</a>
+        </div>
+      </div>
+      <div class="place-card">
+        <div class="card-photo-blank">峇里島 Spa（暫無圖片）</div>
+        <div class="card-body">
+          <span class="card-tag ba-tag">放鬆體驗</span>
+          <div class="card-name">峇里島傳統 Spa 按摩</div>
+          <div class="card-sub">📍 Seminyak / Ubud 各 Spa 中心 ⏰ 上午場次</div>
+          <p class="card-desc">峇里島的傳統峇里按摩（Balinese Massage）是全球知名的放鬆療法，以全身精油按摩為主，力道舒適溫和，特別適合長途旅行後的疲勞恢復。費用約 IDR 100,000–200,000（極為實惠），可安排上午場次，傍晚再前往金巴蘭享用海鮮晚餐，是完美的組合。</p>
+          <div class="card-time">⏰ 上午場 10:00–12:00</div>
+        </div>
+      </div>
+    </div>
+    <div class="food-section"><div class="food-title">🦞 金巴蘭必點海鮮</div><div class="food-items"><div class="food-item"><span>🦞</span>炭烤龍蝦</div><div class="food-item"><span>🦐</span>烤大蝦/虎蝦</div><div class="food-item"><span>🐟</span>烤整尾鮮魚</div><div class="food-item"><span>🦑</span>烤魷魚</div></div></div>
+    <div class="tip-box ba-tip"><span class="tip-icon">💰</span><span>建議選擇含套餐式菜單（Set Menu）約 IDR 200,000–400,000/人，含魚、蝦、飲料，較為划算。記得查清楚菜單是否含龍蝦，避免誤解額外計費。</span></div>
+  </div>
+  <div class="day-panel" id="bali-day-5">
+    <div class="day-header"><div class="day-num ba-num">05</div><div class="day-title-wrap"><h2>🎊 婚禮日 — 9月10日</h2><p>📍 婚禮地點 + 爸媽自由活動</p></div></div>
+    <div class="places-grid">
+      <div class="place-card">
+        <div class="card-photo-blank">Seminyak 沙灘（暫無圖片）</div>
+        <div class="card-body">
+          <span class="card-tag ba-tag">爸媽的自由日</span>
+          <div class="card-name">沙灘漫步 × 飯店 Spa 放鬆</div>
+          <div class="card-sub">📍 Seminyak / Canggu 海灘區</div>
+          <p class="card-desc">婚禮當天爸媽可依喜好安排活動：在飯店享用悠閒早餐後，步行至沙灘散步吹海風；或預約飯店 Spa 度過輕鬆上午；下午在 Seminyak 區的咖啡廳坐坐，欣賞海景。若住在有私人泳池的 Villa，在泳池邊曬曬太陽是最舒適的選擇。</p>
+          <div class="card-time">⏰ 全天彈性自由</div>
+        </div>
+      </div>
+    </div>
+    <div class="tip-box ba-tip"><span class="tip-icon">🏡</span><span>建議整趟峇里島選擇有私人泳池的 Villa，而非一般飯店。Seminyak 區的雙臥室 Pool Villa 每晚約 NT$5,000–10,000，爸媽可在 Villa 內自由活動，完全不需要出門也能享受完美假期。</span></div>
+  </div>
+  <div class="day-panel" id="bali-day-6">
+    <div class="day-header"><div class="day-num ba-num">06</div><div class="day-title-wrap"><h2>努沙杜瓦 — 平靜海灘 × 克差舞</h2><p>📍 努沙杜瓦（Nusa Dua）</p></div></div>
+    <div class="places-grid">
+      <div class="place-card">
+        <div class="card-photo-blank">努沙杜瓦海灘（暫無圖片）</div>
+        <div class="card-body">
+          <span class="card-tag ba-tag">靜謐海灘</span>
+          <div class="card-name">努沙杜瓦海灘 Nusa Dua</div>
+          <div class="card-sub">📍 Nusa Dua, Badung ⏰ 全天</div>
+          <p class="card-desc">峇里島南部最安靜、最整潔的高級海灘區，海浪平靜、水清沙白，非常適合在海邊悠閒漫步放鬆。沙灘邊有完善步道，可輕鬆散步 1–2 小時。附近的 Bali Collection 購物中心可吹冷氣休息，整個區域環境整潔舒適。</p>
+          <div class="card-time">⏰ 上午 09:00–12:00 最涼爽</div>
+        </div>
+      </div>
+      <div class="place-card">
+        <div class="card-photo-blank">克差舞（暫無圖片）</div>
+        <div class="card-body">
+          <span class="card-tag ba-tag">傳統文化表演</span>
+          <div class="card-name">克差舞 Kecak Dance</div>
+          <div class="card-sub">📍 海神廟或 Garuda Wisnu Kencana ⏰ 約 18:00–19:00</div>
+          <p class="card-desc">峇里島最具代表性的傳統火焰舞蹈，演員以「恰克恰克」的人聲合唱取代所有樂器伴奏，再現印度史詩羅摩衍那的故事情節。在海神廟或 GWK 文化公園觀看的日落版克差舞尤為震撼，是峇里島文化體驗中最不應錯過的一場。</p>
+          <div class="card-time">⏰ 建議提前購票，表演約 1 小時</div>
+        </div>
+      </div>
+    </div>
+    <div class="food-section"><div class="food-title">🍽 今日美食</div><div class="food-items"><div class="food-item"><span>🐷</span>峇里烤乳豬（最後機會！）</div><div class="food-item"><span>🐟</span>海鮮拼盤晚餐</div></div></div>
+    <div class="tip-box ba-tip"><span class="tip-icon">🎭</span><span>克差舞建議提前 1–2 天購票，熱門場次容易售完。在海神廟（Tanah Lot）觀看最具氣氛，GWK 文化公園場地較大、視野更好，各有特色。</span></div>
+  </div>
+  <div class="day-panel" id="bali-day-7">
+    <div class="day-header"><div class="day-num ba-num">07</div><div class="day-title-wrap"><h2>返程日 — 最後採購</h2><p>📍 機場出發</p></div></div>
+    <div class="places-grid">
+      <div class="place-card">
+        <img class="card-photo" src="https://lh3.googleusercontent.com/place-photos/AJRVUZOetHgJ1L3yVYsxMkfqSx2Dti7Sa93kOB1P7UExiDPnSIMH9O8ePlva1Lu6vqMy2BQHA7hgMsXeev9LfkCQlINixcGdu1GMpvfDfXu5qWIHQxbPnq6vIb1IddEGvxRj1J8VU_VyKkKlwcR6=s800-w800-h600" alt="蘇卡瓦提" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+        <div class="card-body">
+          <span class="card-tag ba-tag">最後採購</span>
+          <div class="card-name">蘇卡瓦提市集 × 機場伴手禮</div>
+          <div class="card-sub">📍 蘇卡瓦提 / DPS 機場 ⏰ 上午採購</div>
+          <p class="card-desc">最後一天上午可再去蘇卡瓦提補購沒買完的紀念品，或直接在機場免稅區採購（選擇較少但方便）。推薦峇里島伴手禮：手工木雕、天然香氛精油、峇里島咖啡豆、傳統蠟染布料。</p>
+          <div class="card-time">⏰ 上午採購，14:00 前往機場</div>
+        </div>
+      </div>
+    </div>
+    <div class="food-section"><div class="food-title">🎁 必買峇里島伴手禮</div><div class="food-items"><div class="food-item"><span>☕</span>峇里島咖啡豆</div><div class="food-item"><span>🪵</span>手工木雕小擺件</div><div class="food-item"><span>🌺</span>天然香氛精油</div><div class="food-item"><span>👗</span>蠟染布/傳統服飾</div></div></div>
+    <div class="tip-box ba-tip"><span class="tip-icon">✈️</span><span>峇里島（DPS）機場建議提早 2.5 小時抵達，旺季出境排隊較長。主要採購建議在出發前一天完成，機場店選擇有限且稍貴。</span></div>
+  </div>
+</div>
+
+<!-- ══════════════ THAILAND ══════════════ -->
+<div id="dest-thai" class="destination-panel">
+  <div class="hero">
+    <div class="hero-bg" style="background-image:url('https://lh3.googleusercontent.com/place-photos/AJRVUZNn46AQg3zBEVhdaxoTXqaMoOWBaPpDKs1c4X7hd4jhHF7TnuSJh5sB9gJtX_SLtUuyUvgWbApEehVyJ4fNBOHzCwSz2kIMUFw0o78VKIogSO7Xp4n4B16jm7r0J0hJ4PJhW16iUUAzGbGNXeo=s1200-w1200-h600')"></div>
+    <div class="hero-content">
+      <span class="hero-badge th-badge">Bangkok 7 Days</span>
+      <h1>泰國曼谷<br>水市集 × 大市集 × 古城</h1>
+      <p>Asiatique → 水上市集 → 洽圖洽 → 臥佛寺 → 大城 → 安帕瓦 → 返程</p>
+    </div>
+  </div>
+  <div class="day-tabs-bar" id="thai-tabs">
+    <div class="day-tab active-thai" onclick="switchDay('thai',1)">Day 1<br>抵達曼谷</div>
+    <div class="day-tab" onclick="switchDay('thai',2)">Day 2<br>水市集+洽圖洽</div>
+    <div class="day-tab" onclick="switchDay('thai',3)">Day 3<br>臥佛寺+河濱</div>
+    <div class="day-tab" onclick="switchDay('thai',4)">Day 4<br>自由日</div>
+    <div class="day-tab" onclick="switchDay('thai',5)">Day 5<br>大城古城日遊</div>
+    <div class="day-tab" onclick="switchDay('thai',6)">Day 6<br>安帕瓦水市集</div>
+    <div class="day-tab" onclick="switchDay('thai',7)">Day 7<br>返程採購</div>
+  </div>
+  <div class="day-panel active" id="thai-day-1">
+    <div class="day-header"><div class="day-num th-num">01</div><div class="day-title-wrap"><h2>抵達曼谷 — Asiatique 河濱夜市</h2><p>📍 曼谷</p></div></div>
+    <div class="places-grid">
+      <div class="place-card">
+        <div class="card-photo-blank">Asiatique 河濱廣場（暫無圖片）</div>
+        <div class="card-body">
+          <span class="card-tag th-tag">河濱夜市</span>
+          <div class="card-name">Asiatique The Riverfront</div>
+          <div class="card-sub">📍 Charoen Krung Rd, Bangkok ⏰ 17:00–翌晨</div>
+          <p class="card-desc">昭披耶河畔的大型夜市購物廣場，融合倉庫改建的工業風建築與熱帶夜晚氛圍，超過 1,500 家攤位與餐廳，夜晚從 BTS 搭接駁船直接到達，交通便利。步調悠閒、選擇豐富，是初抵曼谷最輕鬆的第一個夜晚。</p>
+          <div class="card-time">⏰ 建議 19:00 前往，晚上最熱鬧</div>
+        </div>
+      </div>
+      <div class="place-card">
+        <img class="card-photo" src="https://lh3.googleusercontent.com/places/ANXAkqHYfQ3zitRWs46ecUkJ1dGxOM27XfQCJKAzdTI2t_ZhhPTSFjUug-GXKBwJ38rCEmUmuI6Y9vyMNFg_KdpQOHr0RDESkgHlyFQ=s800-w800-h600" alt="Thipsamai Pad Thai" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+        <div class="card-body">
+          <span class="card-tag th-tag">⭐ 曼谷名物 / 晚餐</span>
+          <div class="card-name">Thipsamai — 泰式炒河粉（Pad Thai）</div>
+          <div class="card-sub">📍 Maha Chai Rd ⭐ 4.2 / 12,300+ 評價 ⏰ 09:00–深夜（週二休）</div>
+          <p class="card-desc">曼谷最著名的 Pad Thai 老字號，以蛋包裹炒河粉的特色手法享譽全球，佐以鮮蝦、豆芽菜和蝦米，甜鹹交融、香氣濃郁。排隊是常態但隊伍移動迅速，是初到曼谷體驗道地泰式料理的最佳起點之一。</p>
+          <div class="card-time">⏰ 建議晚餐時段前往，需排隊</div>
+          <a href="https://maps.google.com/?cid=7605461113463140286" target="_blank" class="map-link th-map">🗺 Google Maps</a>
+        </div>
+      </div>
+    </div>
+    <div class="food-section"><div class="food-title">🍽 今日美食</div><div class="food-items"><div class="food-item"><span>🍜</span>泰式炒河粉 Pad Thai</div><div class="food-item"><span>🌶️</span>打拋豬飯</div><div class="food-item"><span>🥭</span>芒果糯米飯</div></div></div>
+    <div class="tip-box th-tip"><span class="tip-icon">🚇</span><span>住宿建議選在 BTS Skytrain 沿線（Sukhumvit 或 Silom 線）。曼谷 Grab app 叫車非常方便且安全，強烈推薦取代一般計程車。</span></div>
+  </div>
+  <div class="day-panel" id="thai-day-2">
+    <div class="day-header"><div class="day-num th-num">02</div><div class="day-title-wrap"><h2>水上市集 × 洽圖洽 — 全日市集大作戰</h2><p>📍 丹嫩沙朵 + 洽圖洽（需週六或日）</p></div></div>
+    <div class="route-banner">
+      <span class="route-stop"><span class="route-dot th-dot"></span>⏰ 07:00 出發</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot th-dot"></span>丹嫩沙朵水上市集</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot th-dot"></span>返曼谷午餐</span><span class="route-arrow">→</span>
+      <span class="route-stop"><span class="route-dot th-dot"></span>洽圖洽週末大市集</span>
+    </div>
+    <div class="places-grid">
+      <div class="place-card">
+        <img class="card-photo" src="https://lh3.googleusercontent.com/place-photos/AJRVUZNn46AQg3zBEVhdaxoTXqaMoOWBaPpDKs1c4X7hd4jhHF7TnuSJh5sB9gJtX_SLtUuyUvgWbApEehVyJ4fNBOHzCwSz2kIMUFw0o78VKIogSO7Xp4n4B16jm7r0J0hJ4PJhW16iUUAzGbGNXeo=s800-w800-h600" alt="丹嫩水上市集" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+        <div class="card-body">
+          <span class="card-tag th-tag">⭐ 水上市集</span>
+          <div class="card-name">丹嫩沙朵水上市集</div>
+          <div class="card-sub">📍 Ratchaburi Province ⭐ 3.8 評價 ⏰ 07:00–13:00</div>
+          <p class="card-desc">泰國最知名的傳統水上市集，船夫划著長尾木船，沿水道叫賣新鮮熱帶水果、當地小食和紀念品。強烈建議租一艘小船進入水道內部探索，才能看到最精彩的市集畫面。早上 7–9 點人潮較少、氣氛最好，距曼谷車程約 90 分鐘。</p>
+          <div class="card-time">⏰ 07:00–11:00 最佳，包車前往</div>
+          <a href="https://maps.google.com/?cid=6363252256166896091" target="_blank" class="map-link th-map">🗺 Google Maps</a>
+        </div>
+      </div>
+      <div class="place-card">
+        <img class="card-photo" src="https://lh3.googleusercontent.com/place-photos/AJRVUZM2Pm5gBQCW2dw5ilQOr4sYWIOHrjgZWRZ6Q7ZZn9FjThaNudgs0iheqHXxejG0lV-gx53GddWOOYuE6S42KhzyfgwjWSXq7hCwQN1kXWoQI1xfW6ktgH04hH5UAelSl1cX7VgRkymkqwWX3kg=s800-w800-h600" alt="洽圖洽市集" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+        <div class="card-body">
+          <span class="card-tag th-tag">⭐ 亞洲最大週末市集</span>
+          <div class="card-name">洽圖洽週末市集 Chatuchak</div>
+          <div class="card-sub">📍 Chatuchak ⭐ 4.4 / 55,000+ 評價 ⏰ 週六日開放</div>
+          <p class="card-desc">全球規模最大的週末市集之一，超過 10,000 家攤位分成 27 個區域，涵蓋衣服、手工藝、古董、家居、食物等各種品類。喜歡逛市集的旅客在此可以輕鬆花上 3–4 小時，記得帶小風扇和多喝水，高溫多濕。</p>
+          <div class="card-time">⏰ 下午 14:00–18:00（避開最熱時段）</div>
+          <a href="https://maps.google.com/?cid=10516346959717498187" target="_blank" class="map-link th-map">🗺 Google Maps</a>
+        </div>
+      </div>
+    </div>
+    <div class="tip-box th-tip"><span class="tip-icon">📅</span><span>⚠️ 重要：洽圖洽市集只有週六、週日開放！規劃行程時確保 Day 2 是週末。丹嫩沙朵水上市集每天開放但下午就收攤，務必早上出發。</span></div>
+  </div>
+  <div class="day-panel" id="thai-day-3">
+    <div class="day-header"><div class="day-num th-num">03</div><div class="day-title-wrap"><h2>臥佛寺 × 昭披耶河 + Somboon 海鮮晚宴</h2><p>📍 曼谷舊城區 + 河濱</p></div></div>
+    <div class="places-grid">
+      <div class="place-card">
+        <div class="card-photo-blank">臥佛寺（暫無圖片）</div>
+        <div class="card-body">
+          <span class="card-tag th-tag">文化景點</span>
+          <div class="card-name">臥佛寺 Wat Pho</div>
+          <div class="card-sub">📍 Grand Palace Road ⏰ 08:00–18:30</div>
+          <p class="card-desc">曼谷最古老、規模最大的寺廟之一，以 46 公尺長的臥佛金身聞名。寺廟建築精緻壯麗，鑲嵌著無數瓷片和金箔。同時也是泰式按摩的發源地，廟內設有傳統按摩學校（可另付費體驗）。建議上午 09:00 前往，氣溫較涼爽。</p>
+          <div class="card-time">⏰ 上午 09:00–11:30</div>
+        </div>
+      </div>
+      <div class="place-card">
+        <img class="card-photo" src="https://lh3.googleusercontent.com/place-photos/AJRVUZPT4tKCC_mMmBD9N4OhmJMg7l4XYjlUlVbUuDtN5V20KtqiIr1jfO_HQ2uWL-_StQpB9N18q5TzpZkgh48p9uLeGbjIwEMjlpQDW6sY3rrttgNNflVmNdqMBPLUTjGY0QWTWo9zaYoDz1YA5X3EYjBI=s800-w800-h600" alt="Somboon Seafood" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+        <div class="card-body">
+          <span class="card-tag th-tag">⭐ 晚餐 / 招牌咖哩蟹</span>
+          <div class="card-name">Somboon Seafood — 咖哩螃蟹</div>
+          <div class="card-sub">📍 Surawong Rd ⭐ 4.2 / 6400+ 評價（米其林推薦）⏰ 11:00–22:00</div>
+          <p class="card-desc">曼谷最著名的海鮮餐廳之一，以「炒咖哩蟹（Fried Curry Crab）」享譽全球，連續多年獲得米其林指南推薦。肥美的螃蟹配上香濃咖哩醬汁，搭配白飯滋味絕佳。食材新鮮、服務周到，是在曼谷大啖海鮮的最佳選擇。</p>
+          <div class="card-time">⏰ 建議晚餐 18:00–19:30，旺季建議訂位</div>
+          <a href="http://www.somboonseafood.com/" target="_blank" class="map-link th-map">🌐 官網</a>
+        </div>
+      </div>
+    </div>
+    <div class="food-section"><div class="food-title">🦀 Somboon 必點</div><div class="food-items"><div class="food-item"><span>🦀</span>炒咖哩蟹（招牌）</div><div class="food-item"><span>🦐</span>清蒸大蝦</div><div class="food-item"><span>🐟</span>炸魚佐香草</div></div></div>
+    <div class="tip-box th-tip"><span class="tip-icon">☀️</span><span>曼谷 9–10 月氣溫約 30–34 度，建議上午 09:00 前早出發參觀景點，中午在室內餐廳避暑，下午 4 點後再外出。每人每天建議攜帶至少 1.5 公升飲水。</span></div>
+  </div>
+  <div class="day-panel" id="thai-day-4">
+    <div class="day-header"><div class="day-num th-num">04</div><div class="day-title-wrap"><h2>自由日 — 按摩 × 美食 × 購物</h2><p>📍 曼谷市區</p></div></div>
+    <div class="places-grid">
+      <div class="place-card">
+        <div class="card-photo-blank">泰式按摩（暫無圖片）</div>
+        <div class="card-body">
+          <span class="card-tag th-tag">放鬆體驗</span>
+          <div class="card-name">泰式傳統按摩</div>
+          <div class="card-sub">📍 曼谷各區均有</div>
+          <p class="card-desc">泰式按摩是來泰必體驗的經典！一小時費用約 200–350 泰銖（NT$180–300），兩小時精油套餐不過 NT$600–800，CP 值極高。推薦正規連鎖品牌「Health Land」或「Let's Relax」，環境整潔衛生。</p>
+          <div class="card-time">⏰ 上午或午休場最適合</div>
+        </div>
+      </div>
+      <div class="place-card">
+        <div class="card-photo-blank">Terminal 21（暫無圖片）</div>
+        <div class="card-body">
+          <span class="card-tag th-tag">購物 / 美食</span>
+          <div class="card-name">Terminal 21 / Siam Paragon 逛街</div>
+          <div class="card-sub">📍 Sukhumvit / Siam 區 ⏰ 10:00–22:00</div>
+          <p class="card-desc">Terminal 21 是以全球各國機場為主題的特色購物中心，每層樓模擬不同國家機場設計，非常有趣。Siam Paragon 是曼谷最高端百貨，美食街選擇多元。室內冷氣充足，是午後避開高溫的舒適選擇。</p>
+          <div class="card-time">⏰ 下午 13:00–17:00</div>
+        </div>
+      </div>
+    </div>
+    <div class="tip-box th-tip"><span class="tip-icon">💡</span><span>推薦曼谷頂級海鮮選擇：「Somboon Seafood」（咖哩螃蟹）已在 Day 3 安排，可視喜好在自由日嘗試其他在地海鮮，或前往「Or Tor Kor Market」農夫市集（BTS Kamphaengphet 站）品嚐頂級新鮮食材。</span></div>
+  </div>
+  <div class="day-panel" id="thai-day-5">
+    <div class="day-header"><div class="day-num th-num">05</div><div class="day-title-wrap"><h2>大城古城日遊 — 世界文化遺產</h2><p>📍 大城（Ayutthaya）— 車程約 90 分鐘</p></div></div>
+    <div class="places-grid">
+      <div class="place-card">
+        <div class="card-photo-blank">大城古城遺址（暫無圖片）</div>
+        <div class="card-body">
+          <span class="card-tag th-tag">⭐ UNESCO 世界遺產</span>
+          <div class="card-name">大城歷史公園 Ayutthaya</div>
+          <div class="card-sub">📍 Ayutthaya Province ⏰ 全天開放</div>
+          <p class="card-desc">泰國古都，14–18 世紀曾是東南亞最繁華的城市。現存大量古廟遺址、佛塔和臥佛雕像，其中「樹根中的佛頭」是全球最著名的歷史奇景之一。整個歷史公園列為 UNESCO 世界文化遺產，風景如畫，氣氛莊嚴靜謐。</p>
+          <div class="card-time">⏰ 整天遊覽 08:00–17:00</div>
+        </div>
+      </div>
+      <div class="place-card">
+        <div class="card-photo-blank">大城河道遊船（暫無圖片）</div>
+        <div class="card-body">
+          <span class="card-tag th-tag">自然河景</span>
+          <div class="card-name">大城河道遊船</div>
+          <div class="card-sub">📍 Ayutthaya ⏰ 白天</div>
+          <p class="card-desc">大城被三條河流環繞，可選擇搭乘長尾船繞行古城河道，從水上角度欣賞古廟倒影，費用約 300–500 泰銖/船（可多人分攤）。搭配嘟嘟車或自行車串聯各主要廟宇，輕鬆串遊整個古城。</p>
+          <div class="card-time">⏰ 遊船約 1 小時</div>
+        </div>
+      </div>
+    </div>
+    <div class="food-section"><div class="food-title">🍽 今日美食</div><div class="food-items"><div class="food-item"><span>🐟</span>大城河鮮料理</div><div class="food-item"><span>🍡</span>路邊烤肉串</div></div></div>
+    <div class="tip-box th-tip"><span class="tip-icon">🚌</span><span>建議包車前往大城（來回約 1,500–2,000 泰銖），比自行搭火車彈性許多。記得攜帶帽子、防曬乳和充足的水，大城戶外景點較多，體力消耗不少。</span></div>
+  </div>
+  <div class="day-panel" id="thai-day-6">
+    <div class="day-header"><div class="day-num th-num">06</div><div class="day-title-wrap"><h2>安帕瓦水上市集 — 螢火蟲之夜</h2><p>📍 安帕瓦（Amphawa）— 車程約 90 分鐘</p></div></div>
+    <div class="places-grid">
+      <div class="place-card">
+        <div class="card-photo-blank">安帕瓦水上市集（暫無圖片）</div>
+        <div class="card-body">
+          <span class="card-tag th-tag">⭐ 最地道水市集</span>
+          <div class="card-name">安帕瓦水上市集 Amphawa</div>
+          <div class="card-sub">📍 Amphawa, Samut Songkhram ⏰ 週五–日 12:00–20:00</div>
+          <p class="card-desc">比丹嫩沙朵更地道、觀光化程度更低的水上市集。市集沿木橋和河道展開，在地人與遊客並存，可搭乘小船直接向攤販購買食物。現烤大蝦、新鮮蚵仔是必點，價格比曼谷市區便宜許多，充滿真實的市井氣氛。</p>
+          <div class="card-time">⏰ 下午 14:00 出發抵達，傍晚賞螢</div>
+        </div>
+      </div>
+      <div class="place-card">
+        <div class="card-photo-blank">安帕瓦螢火蟲（暫無圖片）</div>
+        <div class="card-body">
+          <span class="card-tag th-tag">🌟 自然奇景（9-10月旺季）</span>
+          <div class="card-name">安帕瓦螢火蟲觀賞</div>
+          <div class="card-sub">📍 Amphawa 運河沿岸 ⏰ 18:00–20:00</div>
+          <p class="card-desc">9 至 11 月是安帕瓦螢火蟲的旺季！天黑後搭乘小船沿河道行駛，兩岸樹叢中閃爍著無數螢火蟲，如夢似幻。費用僅約 50–60 泰銖/人，是整個泰國行程中最難得也最令人感動的自然體驗之一。</p>
+          <div class="card-time">⏰ 天黑後出發，約 45 分鐘</div>
+        </div>
+      </div>
+    </div>
+    <div class="food-section"><div class="food-title">🦐 安帕瓦必吃</div><div class="food-items"><div class="food-item"><span>🦐</span>現烤大蝦</div><div class="food-item"><span>🦪</span>新鮮蚵仔</div><div class="food-item"><span>🐟</span>炸魚料理</div></div></div>
+    <div class="tip-box th-tip"><span class="tip-icon">🌟</span><span>9–10 月是安帕瓦螢火蟲旺季，強烈推薦傍晚出發，體驗水上市集＋螢火蟲的完美組合。安帕瓦比丹嫩沙朵更有在地感，許多旅客認為這才是「真正的泰國水上市集體驗」。</span></div>
+  </div>
+  <div class="day-panel" id="thai-day-7">
+    <div class="day-header"><div class="day-num th-num">07</div><div class="day-title-wrap"><h2>返程日 — 最後採購</h2><p>📍 曼谷市區 → 蘇萬納蓬機場</p></div></div>
+    <div class="places-grid">
+      <div class="place-card">
+        <img class="card-photo" src="https://lh3.googleusercontent.com/place-photos/AJRVUZM2Pm5gBQCW2dw5ilQOr4sYWIOHrjgZWRZ6Q7ZZn9FjThaNudgs0iheqHXxejG0lV-gx53GddWOOYuE6S42KhzyfgwjWSXq7hCwQN1kXWoQI1xfW6ktgH04hH5UAelSl1cX7VgRkymkqwWX3kg=s800-w800-h600" alt="洽圖洽最後採購" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-photo-blank" style="display:none">暫無圖片</div>
+        <div class="card-body">
+          <span class="card-tag th-tag">最後採購</span>
+          <div class="card-name">MBK / 洽圖洽最後補買</div>
+          <div class="card-sub">📍 Siam 區 ⏰ 10:00–21:00</div>
+          <p class="card-desc">MBK Center（馬崩）是曼谷最平價的購物中心，7 層樓從手機、衣服到泰式伴手禮一應俱全。若行程安排在週末，也可再次前往洽圖洽市集補購。上午完成採購，下午搭乘 Airport Rail Link 前往機場。</p>
+          <div class="card-time">⏰ 上午 10:00–13:00，下午機場</div>
+        </div>
+      </div>
+    </div>
+    <div class="food-section"><div class="food-title">🎁 必買泰國伴手禮</div><div class="food-items"><div class="food-item"><span>🌶️</span>泰式辣醬 / 咖哩包</div><div class="food-item"><span>💊</span>泰國萬金油 Tiger Balm</div><div class="food-item"><span>🥥</span>椰子製品</div><div class="food-item"><span>🍫</span>椰子脆片零食</div></div></div>
+    <div class="tip-box th-tip"><span class="tip-icon">✈️</span><span>蘇萬納蓬機場建議提早 3 小時抵達，機場非常大且出境排隊可能較長。可搭 Airport Rail Link 從 Phaya Thai 站直達機場，約 30 分鐘，非常方便。</span></div>
+  </div>
+</div>
+</main>
+
+<script>
+function switchDest(dest){
+  document.querySelectorAll('.destination-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.cmp-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.dest-tab').forEach(t=>t.classList.remove('active-jp','active-bali','active-thai','active-cmp'));
+  if(dest==='cmp'){
+    document.getElementById('dest-cmp').classList.add('active');
+    document.getElementById('tab-cmp').classList.add('active-cmp');
+  } else {
+    document.getElementById('dest-'+dest).classList.add('active');
+    if(dest==='jp') document.getElementById('tab-jp').classList.add('active-jp');
+    if(dest==='bali') document.getElementById('tab-bali').classList.add('active-bali');
+    if(dest==='thai') document.getElementById('tab-thai').classList.add('active-thai');
+    switchDay(dest,1);
+  }
+  window.scrollTo(0,0);
+}
+function switchDay(dest,day){
+  const panel=document.getElementById('dest-'+dest);
+  if(!panel) return;
+  panel.querySelectorAll('.day-panel').forEach(p=>p.classList.remove('active'));
+  const tabBar=document.getElementById(dest+'-tabs');
+  if(!tabBar) return;
+  const ac='active-'+dest;
+  tabBar.querySelectorAll('.day-tab').forEach(t=>t.classList.remove(ac));
+  const dp=document.getElementById(dest+'-day-'+day);
+  if(dp)dp.classList.add('active');
+  const dt=tabBar.querySelectorAll('.day-tab');
+  if(dt[day-1])dt[day-1].classList.add(ac);
+}
+function switchOpt(btn,targetId,dest){
+  const bar=btn.closest('.opt-bar');
+  bar.querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('jp-active','ba-active','th-active'));
+  btn.classList.add(dest+'-active');
+  const dayPanel=btn.closest('.day-panel');
+  dayPanel.querySelectorAll('.opt-panel').forEach(p=>p.classList.remove('active'));
+  const target=document.getElementById(targetId);
+  if(target)target.classList.add('active');
+}
+document.getElementById('tab-cmp').classList.add('active-cmp');
+</script>
+</body>
+</html>
